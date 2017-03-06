@@ -70,4 +70,4 @@ theme: landscape
 deploy:
   type: git
   repo: git@github.com:IamTing93/IamTing93.github.io.git
-  branch: dev
+  branch: master
