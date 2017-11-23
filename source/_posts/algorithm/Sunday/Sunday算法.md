@@ -30,23 +30,23 @@ tags: algorithm
 
 &ensp;t = "BC", tLen = 2
 
-![pic1](./pic1.png, "pic1")
+![pic1](pic1.png, "pic1")
 
 如上图片所示，一开始从i = 0开始匹配字符，此时s[0] = Y, t[0] = B，两者不匹配，查找s中下标为i + tLen = 2的字符s[2] = A,从右往左查找A在t中第一次出现的下标，但是A并不存在于t中，所以i要右移到下标位i + tLen + 1 = 3处;
 
 
 
-![pic2](./pic3.png, "pic2")
+![pic2](pic3.png, "pic2")
 
 图2所示，i = 3,此时按照算法是会在s匹配到一个BC，匹配后，i需要往右位移tLen = 2位。
 
 
-![pic3](./pic4.png, "pic3")
+![pic3](pic4.png, "pic3")
 
 图3所示，i = 5,此时s[5] = Y, t[6] = B，两者不匹配,查找s中下标为i + tLen = 7的字符s[7] = B,从右往左查找B在t中第一次出现的下标，为7，此时其位置与t最右边的字符距离为dis = 1，所以i需要往右dis + 1 = 2位，即移动到s[7]的位置。
 
 
-![pic4](./pic5.png, "pic4")
+![pic4](pic5.png, "pic4")
 
 图4所示，循环遍历s,直到s的第sLen - tLen位，算法结束。
 
