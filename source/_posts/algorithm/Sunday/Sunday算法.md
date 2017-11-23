@@ -6,9 +6,9 @@ tags: algorithm
 
 &ensp;之前刷字符串匹配的题目，都是用最简单暴力的 -- 一个个字符匹配，效率可想而知。
 
-&ensp;当然网上是有一大堆的字符串匹配算法，如经典的KMP算法，但对于我这种没耐性又笨的人来说，KMP是在难以理解，又难实现。所以一直在寻找一个简单又易懂的替代算法，于是就有了这篇博文。
+&ensp;当然网上是有一大堆的字符串匹配算法，如经典的KMP算法，但对于我这种没耐性又笨的人来说，KMP实在难以理解，又难实现。所以一直在寻找一个简单又易懂的替代算法，于是就有了这篇博文。
 
-&ensp;Sunday算法的历史什么的就不过多叙述了，也不与其它算法做太多比较，毕竟嘿嘿。不过这个能称得上简答高效还是有它的道理。
+&ensp;Sunday算法的历史什么的就不过多叙述了，也不与其它算法做太多比较，毕竟嘿嘿。不过这个算法能称得上简单高效还是有它的道理。
 
 &ensp;字符串匹配的核心思想是**做尽量少的比较来提高匹配速度**。
 
@@ -30,23 +30,23 @@ tags: algorithm
 
 &ensp;t = "BC", tLen = 2
 
-![pic1](https://github.com/IamTing93/IamTing93.github.io/blob/dev/source/_posts/algorithm/Sunday/pic1.png, "pic1")
+![pic1](https://github.com/IamTing93/IamTing93.github.io/blob/dev/source/_posts/algorithm/Sunday/pic1.png "pic1")
 
 如上图片所示，一开始从i = 0开始匹配字符，此时s[0] = Y, t[0] = B，两者不匹配，查找s中下标为i + tLen = 2的字符s[2] = A,从右往左查找A在t中第一次出现的下标，但是A并不存在于t中，所以i要右移到下标位i + tLen + 1 = 3处;
 
 
 
-![pic2](https://github.com/IamTing93/IamTing93.github.io/blob/dev/source/_posts/algorithm/Sunday/pic3.png, "pic2")
+![pic2](https://github.com/IamTing93/IamTing93.github.io/blob/dev/source/_posts/algorithm/Sunday/pic3.png "pic2")
 
 图2所示，i = 3,此时按照算法是会在s匹配到一个BC，匹配后，i需要往右位移tLen = 2位。
 
 
-![pic3](https://github.com/IamTing93/IamTing93.github.io/blob/dev/source/_posts/algorithm/Sunday/pic4.png, "pic3")
+![pic3](https://github.com/IamTing93/IamTing93.github.io/blob/dev/source/_posts/algorithm/Sunday/pic4.png "pic3")
 
 图3所示，i = 5,此时s[5] = Y, t[6] = B，两者不匹配,查找s中下标为i + tLen = 7的字符s[7] = B,从右往左查找B在t中第一次出现的下标，为7，此时其位置与t最右边的字符距离为dis = 1，所以i需要往右dis + 1 = 2位，即移动到s[7]的位置。
 
 
-![pic4](https://github.com/IamTing93/IamTing93.github.io/blob/dev/source/_posts/algorithm/Sunday/pic5.png, "pic4")
+![pic4](https://github.com/IamTing93/IamTing93.github.io/blob/dev/source/_posts/algorithm/Sunday/pic5.png "pic4")
 
 图4所示，循环遍历s,直到s的第sLen - tLen位，算法结束。
 
