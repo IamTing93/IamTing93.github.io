@@ -2,12 +2,15 @@
 title: activity的四种启动模式
 date: 2017-03-30 00:00:00
 category: android
-tags: android 
+tags: android
 ---
+
 
 ## activity的四种启动模式
 
 本文是学习郭霖《第一行代码》的笔记。
+
+<!-- more -->
 
 **Activity有四种启动模式，分别是**
 
