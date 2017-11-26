@@ -50,35 +50,36 @@ tags: algorithm
 
 以下给出c++的算法实现。
 
-	int sunday(char* s, int sLen, char* t, int tLen) {
+```cpp
+int sunday(char* s, int sLen, char* t, int tLen) {
 
-		int next[26];
+	int next[26];
 
-		for (register int i = 0; i < 26; i++) next[i] = tLen + 1;
+	for (register int i = 0; i < 26; i++) next[i] = tLen + 1;
 
-		// 优化，预先计算匹配字符串中每个字符到最右的距离并加1，可以手动模拟计算验证
-		for (register int i = 0; i < tLen; i++) next[t[i] - 'a'] = tLen - i;
+	// 优化，预先计算匹配字符串中每个字符到最右的距离并加1，可以手动模拟计算验证
+	for (register int i = 0; i < tLen; i++) next[t[i] - 'a'] = tLen - i;
 
-		int counter = 0;
-		register int ptr = 0;
-		for (register int i = 0; i <= sLen - tLen; ) {
-			if (s[i + ptr] == t[ptr]) {
-				ptr++;
-				if (ptr == tLen) {
-					counter++;
-					ptr = 0;
-					i += tLen;
-				}
-			} else if (i + tLen < sLen) { // 这里的判断条件不能够漏掉，不然可能数组越界
-				i += next[s[i + tLen] - 'a'];
+	int counter = 0;
+	register int ptr = 0;
+	for (register int i = 0; i <= sLen - tLen; ) {
+		if (s[i + ptr] == t[ptr]) {
+			ptr++;
+			if (ptr == tLen) {
+				counter++;
 				ptr = 0;
-			} else {
-				break;
+				i += tLen;
 			}
+		} else if (i + tLen < sLen) { // 这里的判断条件不能够漏掉，不然可能数组越界
+			i += next[s[i + tLen] - 'a'];
+			ptr = 0;
+		} else {
+			break;
 		}
-		return counter;
 	}
-
+	return counter;
+}
+```
 
 时间复杂度o(n)
 
