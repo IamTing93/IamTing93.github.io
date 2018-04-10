@@ -15,22 +15,22 @@ tags: algorithm
 
 假设现在有如下的图，我们需要计算从0号点到5号点的最短距离。
 
-![map](/img/algorithm/Djikstra/map.png "map")
+![map](/img/algorithm/Djikstra/map.jpg "map")
 
 假设有一个表dist，记录着从出发点(0号点)到其他点的最短距离。还有一个表visited，记录着已经访问过的点。
 
 1. 对表dist和表visited进行初始化。
     与0号点直接邻接的点，它们之间距离就是直接距离；而不相邻的点，它们之间的距离是无限远。所以此时表dis和表visited的状态如下。
 	
-    ![step1_表dist](/img/algorithm/Djikstra/step1_dist.png "step1_表dist")
+    ![step1_表dist](/img/algorithm/Djikstra/step1_dist.jpg "step1_表dist")
 	
-    ![step1_表visited](/img/algorithm/Djikstra/step1_visited.png "step1_表visited")
+    ![step1_表visited](/img/algorithm/Djikstra/step1_visited.jpg "step1_表visited")
 
 2. 从表dist中可以知道，从0号点出发，到2号点的距离是最短的，所以选择2号点作为下一个拓展的点，标记为visited。此时需要更新表dist的信息。更新的原则是`若dist(a->b) + dist(b->c) < dist(a->c)，则选择dist(a->b) + dist(b->c)作为从a到c的距离`，也就是说经过中转点距离比直接去的距离还要少。遍历那些还没有visited的点后，得到的表dist和表visted如下。
 
-    ![step2_表dist](/img/algorithm/Djikstra/step2_dist.png "step2_表dist")
+    ![step2_表dist](/img/algorithm/Djikstra/step2_dist.jpg "step2_表dist")
 	
-    ![step2_表visited](/img/algorithm/Djikstra/step2_visited.png "step2_表visited")
+    ![step2_表visited](/img/algorithm/Djikstra/step2_visited.jpg "step2_表visited")
 
 	譬如，原本0->3的距离是无穷远，但从0->2->3的距离为6，所以更新0->3的距离为6。
 
@@ -38,27 +38,27 @@ tags: algorithm
 	
     第三步，拓展1号点。
 	
-    ![step3_表dist](/img/algorithm/Djikstra/step3_dist.png "step3_表dist")
+    ![step3_表dist](/img/algorithm/Djikstra/step3_dist.jpg "step3_表dist")
     
-    ![step3_表visited](/img/algorithm/Djikstra/step3_visited.png "step3_表visited")
+    ![step3_表visited](/img/algorithm/Djikstra/step3_visited.jpg "step3_表visited")
 
 	第四步，拓展3号点。
 	
-    ![step4_表dist](/img/algorithm/Djikstra/step4_dist.png "step4_表dist")
+    ![step4_表dist](/img/algorithm/Djikstra/step4_dist.jpg "step4_表dist")
 	
-    ![step4_表visited](/img/algorithm/Djikstra/step4_visited.png "step4_表visited")
+    ![step4_表visited](/img/algorithm/Djikstra/step4_visited.jpg "step4_表visited")
 
 	第五步，拓展4号点。
 	
-    ![step5_表dist](/img/algorithm/Djikstra/step5_dist.png "step5_表dist")
+    ![step5_表dist](/img/algorithm/Djikstra/step5_dist.jpg "step5_表dist")
 	
-    ![step5_表visited](/img/algorithm/Djikstra/step5_visited.png "step5_表visited")
+    ![step5_表visited](/img/algorithm/Djikstra/step5_visited.jpg "step5_表visited")
 
 	第六步，拓展5号点。
 
-    ![step6_表dist](/img/algorithm/Djikstra/step6_dist.png "step2_表dist")
+    ![step6_表dist](/img/algorithm/Djikstra/step6_dist.jpg "step2_表dist")
 	
-    ![step6_表visited](/img/algorithm/Djikstra/step6_visited.png "step6_表visited")
+    ![step6_表visited](/img/algorithm/Djikstra/step6_visited.jpg "step6_表visited")
 
 从上面的描述中可以看出，Djikstra算法是采取了贪心策略：每次都选距离最短的。
 当所有距离都相等的时候，Djikstra算法退化为广度优先搜索(BFS)。
