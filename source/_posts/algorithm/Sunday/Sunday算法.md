@@ -41,7 +41,7 @@ tags: algorithm
 
 ![pic3](/img/algorithm/sunday/pic4.png "pic3")
 
-图3所示，i = 5,此时s[5] = Y, t[6] = B，两者不匹配,查找s中下标为i + tLen = 7的字符s[7] = B,从右往左查找B在t中第一次出现的下标，为7，此时其位置与t最右边的字符距离为dis = 1，所以i需要往右dis + 1 = 2位，即移动到s[7]的位置。
+图3所示，i = 5,此时s[5] = D, t[0] = B，两者不匹配,查找s中下标为i + tLen = 7的字符s[7] = B,从右往左查找B在t中第一次出现的下标，为0，此时其位置与t最右边的字符距离为dis = 1，所以i需要往右dis + 1 = 2位，即移动到s[7]的位置。
 
 
 ![pic4](/img/algorithm/sunday/pic5.png "pic4")
