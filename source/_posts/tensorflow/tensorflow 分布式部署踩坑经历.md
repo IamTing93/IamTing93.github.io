@@ -19,10 +19,10 @@ password:
 
 这里集群的环境是1个ps和2个worker
 
-####hadoop和spark部署
+#### hadoop和spark部署
 hadoop和spark的部署这里不做叙述，网上的资料一大堆，按照来基本上没有问题，有问题的话再找一个其它靠谱的再配，反正最终能运行就可以了。
 
-####tensorflow和tensorflowOnSpark安装
+#### tensorflow和tensorflowOnSpark安装
 这里是采取yarn作为资源管理器，具体安装过程可以参考[官网](https://github.com/yahoo/TensorFlowOnSpark/wiki/GetStarted_YARN)。网上很多文章都说官方说明文档简略，但是其实踩完坑后发觉，其实真的就这么简略，跑不起来，大多是和自身集群的配置有关。所以这些坑得自己填，官方也只能给提示。
 
 一句话，`官方的说明文档是可以跑起来的`！
@@ -76,5 +76,5 @@ hadoop和spark的部署这里不做叙述，网上的资料一大堆，按照来
 
 这个坑也见了好多次，最后是按照这个[帖子](https://github.com/yahoo/TensorFlowOnSpark/issues/248)，在脚本上加上`--executor-cores 1`就ok了，具体原理也没深究...
 
-####体会
+#### 体会
 作为一个毫无经验的小白来说，一开始是按官方说明文档来配置的，所以发生问题都不知道怎么分析，只能谷歌百度，胡乱配置，所以碰了不少的壁，吃力不讨好。后面还是下决心补了一下基本知识，像tensorflow 分布式里面的ps、worker概念，以及spark，hadoop的基本概念，架构等等，就上手很多了，所谓“工欲善其事必先利其器”，即增长了经验，又解决问题，这点学习时间还是性价比很高的。
