@@ -101,7 +101,7 @@ init_page_content: HOME_NAV  # HOME_NAV | POST
 
 # gitment comment service
 gitment:
-  enable: true
+  enable: false
   mint: true
   count: true
   lazy: false
