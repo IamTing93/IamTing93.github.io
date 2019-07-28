@@ -66,10 +66,9 @@ pagination_dir: page
 theme: fexo
 
 search:
-  path: search.xml
-  field: post
-  format: html
-  limit: 10000
+  path: search.json
+  source: all # other values: posts, pages
+  trim_html: false
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
