@@ -77,18 +77,3 @@ deploy:
   type: git
   repo: git@github.com:IamTing93/IamTing93.github.io.git
   branch: master
-
-# Comments 
-gitment:
-  enable: true
-  mint: true
-  count: true
-  lazy: false
-  cleanly: false
-  language:
-  github_user: IamTing93
-  github_repo: blog_comments
-  client_id: 4f5c50c79d1d6d7b3676
-  client_secret: 84b229e245d0fb9f11351054c3bc93285606fa95
-  proxy_gateway:
-  redirect_protocol:
