@@ -1,6 +1,6 @@
 ---
 title: scrapy 日志输出踩过的坑
-date: 2019-08-06 00:01:44
+date: 2018-10-24 00:01:44
 tags: python, scrapy
 password: 
 ---
@@ -19,14 +19,14 @@ scrapy使用的日志输出库是python的标准输出模块logging，使用方�
 	you will need to use a JSON format for the configuration, which will use dictConfig() for configuration.
 	This method allows you to specify disable_existing_loggers as False in the configuration you send.
 
-disable_existing_loggers默认为true，这个会把scrapy的logger给disabled了
-在json的配置文件里，加上那么一句`disable_existing_loggers:false`。scrapy的log就都输出来了，问题解决。
 
-另外一个问题就是，当调用[logging.config.dictConfig](https://docs.python.org/3.7/library/logging.config.html#logging.config.dictConfig)的时候，并且`disable_existing_loggers:false`,原来的logger虽然还是能用，但是logger的handler都不见了，这个时候原来的logger就会调用root logger的handler，这个bug也找了我很久。
+disable_existing_loggers默认为true，这个会把scrapy的logger给disabled了
+
+在json的配置文件里，加上那么一句`disable_existing_loggers:false`。scrapy的log就都输出来了，问题解决。
 
 ---
 
 还有一个关于在多进程下利用ConcurrentLogHandler输出日志的问题，在linux下正常工作，但是在windows下，写文件的时候会被锁住挂起。解决方法是用[concurrent-log-handler](https://github.com/Preston-Landers/concurrent-log-handler)进行替代，参考[这里](https://blog.csdn.net/wkb342814892/article/details/80281182)。
 
-
+---
 总结:因为都是边做边学，所以都没有好好研究过，特别是官方文档，浪费的时间有点多。还是那句老话，工欲善其事必先利其器，还是得先静下心来学习。
