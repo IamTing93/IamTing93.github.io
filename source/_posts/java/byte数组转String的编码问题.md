@@ -49,7 +49,7 @@ java -ea -cp ./ com.demo.Main
 
 结果如下
 
-<img src="../../img/project/btyeToString_01.PNG" style="zoom: 150%;" />
+![图1](/img/project/btyeToString_01.PNG "图1")
 
 第二个断言错误出错了。这是为什么呢，同样是把一个byte数组先转为string，然后再转为byte数组，但是第一个断言就没有问题，但是第二个断言就报错了。
 
@@ -96,7 +96,7 @@ UTF-8读到字节0x8B(1000 1011)，发现这个字节并不对应上述编码规
 
 有了上面的知识储备后，就不难理解代码中为什么第二个断言会错误了，我们来看看它们的字节流是怎么样子的
 
-<img src="../../img/project/btyeToString_02.PNG" style="zoom: 150%;" />
+![图2](/img/project/btyeToString_02.PNG "图1")
 
 normalBin转换前后，字节流都是61，但是bin转为字符串再转回字节数组后，它的值很明显从0x8B(十进制为-117)变为`0xEF` `0xBF` `0xBD`，因为String的默认编码方式是UTF-8。
 
