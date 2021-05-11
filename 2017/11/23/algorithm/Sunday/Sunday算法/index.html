@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Sunday算法 | To Be Better One</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="algorithm,">
+  
+
+  <meta name="description" content="&amp;ensp;之前刷字符串匹配的题目，都是用最简单暴力的 – 一个个字符匹配，效率可想而知。">
+<meta name="keywords" content="algorithm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sunday算法">
+<meta property="og:url" content="https://iamting93.github.io/2017/11/23/algorithm/Sunday/Sunday算法/index.html">
+<meta property="og:site_name" content="To Be Better One">
+<meta property="og:description" content="&amp;ensp;之前刷字符串匹配的题目，都是用最简单暴力的 – 一个个字符匹配，效率可想而知。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/sunday/pic1.png">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/sunday/pic3.png">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/sunday/pic4.png">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/sunday/pic5.png">
+<meta property="og:updated_time" content="2021-05-11T13:16:05.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sunday算法">
+<meta name="twitter:description" content="&amp;ensp;之前刷字符串匹配的题目，都是用最简单暴力的 – 一个个字符匹配，效率可想而知。">
+<meta name="twitter:image" content="https://iamting93.github.io/img/algorithm/sunday/pic1.png">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-algorithm/Sunday/Sunday算法" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Sunday算法</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.11.23</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Ting</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>&ensp;之前刷字符串匹配的题目，都是用最简单暴力的 – 一个个字符匹配，效率可想而知。</p>
+<a id="more"></a>
+<p>&ensp;当然网上是有一大堆的字符串匹配算法，如经典的KMP算法，但对于我这种没耐性又笨的人来说，KMP实在难以理解，又难实现。所以一直在寻找一个简单又易懂的替代算法，于是就有了这篇博文。</p>
+<p>&ensp;Sunday算法的历史什么的就不过多叙述了，也不与其它算法做太多比较，毕竟嘿嘿。不过这个算法能称得上简单高效还是有它的道理。</p>
+<p>&ensp;字符串匹配的核心思想是<strong>做尽量少的比较来提高匹配速度</strong>。</p>
+<p>&ensp;Sunday算法的算法如下：有长为sLen源字符串s，以及长为tLen的需匹配的字符串t。</p>
+<ol>
+<li>从源字符串s的第i位开始，自左往右匹配字符串；</li>
+<li>当匹配到不同的字符时，查找s的第i + tLen位字符ch在匹配字符串t中的位置，查找方式为自右往左遍历，到遇到第一个ch为止。假设此时找到ch时，其位置与t最右边的字符距离为dis;</li>
+<li>从源字符串s的第i + dis + 1开始，重复1的操作，直到s的第sLen - tLen位。</li>
+</ol>
+<p>&ensp;这里需要注意的地方时，若ch在t中不存在，那么此时dis = tLen，即从源字符串s的第i + tLen + 1开始匹配, 因为i + 1到i + tLen之间的子字符串肯定不匹配，所以直接从i + tLen + 1开始。另外，若果在s中匹配到t字符串，i要往右位移tLen位，然后接着1的操作。</p>
+<p>&ensp;以下给出例子：</p>
+<p>&ensp;s = “YJABCDEBFK”, sLen = 10</p>
+<p>&ensp;t = “BC”, tLen = 2</p>
+<p><img src="/img/algorithm/sunday/pic1.png" alt="pic1" title="pic1"></p>
+<p>如上图片所示，一开始从i = 0开始匹配字符，此时s[0] = Y, t[0] = B，两者不匹配，查找s中下标为i + tLen = 2的字符s[2] = A,从右往左查找A在t中第一次出现的下标，但是A并不存在于t中，所以i要右移到下标位i + tLen + 1 = 3处;</p>
+<p><img src="/img/algorithm/sunday/pic3.png" alt="pic2" title="pic2"></p>
+<p>图2所示，i = 3,此时按照算法是会在s匹配到一个BC，匹配后，i需要往右位移tLen = 2位。</p>
+<p><img src="/img/algorithm/sunday/pic4.png" alt="pic3" title="pic3"></p>
+<p>图3所示，i = 5,此时s[5] = D, t[0] = B，两者不匹配,查找s中下标为i + tLen = 7的字符s[7] = B,从右往左查找B在t中第一次出现的下标，为0，此时其位置与t最右边的字符距离为dis = 1，所以i需要往右dis + 1 = 2位，即移动到s[7]的位置。</p>
+<p><img src="/img/algorithm/sunday/pic5.png" alt="pic4" title="pic4"></p>
+<p>图4所示，循环遍历s,直到s的第sLen - tLen位，算法结束。</p>
+<p>以下给出c++的算法实现。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sunday</span><span class="params">(<span class="keyword">char</span>* s, <span class="keyword">int</span> sLen, <span class="keyword">char</span>* t, <span class="keyword">int</span> tLen)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> next[<span class="number">26</span>];</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">26</span>; i++) next[i] = tLen + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 优化，预先计算匹配字符串中每个字符到最右的距离并加1，可以手动模拟计算验证</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; tLen; i++) next[t[i] - <span class="string">'a'</span>] = tLen - i;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> counter = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">register</span> <span class="keyword">int</span> ptr = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= sLen - tLen; ) &#123;</span><br><span class="line">		<span class="keyword">if</span> (s[i + ptr] == t[ptr]) &#123;</span><br><span class="line">			ptr++;</span><br><span class="line">			<span class="keyword">if</span> (ptr == tLen) &#123;</span><br><span class="line">				counter++;</span><br><span class="line">				ptr = <span class="number">0</span>;</span><br><span class="line">				i += tLen;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (i + tLen &lt; sLen) &#123; <span class="comment">// 这里的判断条件不能够漏掉，不然可能数组越界</span></span><br><span class="line">			i += next[s[i + tLen] - <span class="string">'a'</span>];</span><br><span class="line">			ptr = <span class="number">0</span>;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> counter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度o(n)</p>
+<hr>
+<p>文中有疏漏欢迎指出。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/03/16/diary/20170316/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/11/27/diary/20171127/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

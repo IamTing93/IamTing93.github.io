@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>linux下利用pyinstaller打包scrapy | To Be Better One</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="python, scrapy,">
+  
+
+  <meta name="description" content="要把爬虫部署到第三方云上面，自然是不能直接把代码扔上去的。若果编译成.pyc文件打包放上去，也不太保险。最后就调了python里面常用的打包工具pyinstaller，官方教程点这里。 如何利用pyinstaller打包scrapy，其实网上有很多例子，譬如这篇，但是网上大多都是说如何打包成exe的，那么在linux下怎么打包呢？pyinstaller不是一个跨平台的打包工具，在windows下会">
+<meta name="keywords" content="python, scrapy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux下利用pyinstaller打包scrapy">
+<meta property="og:url" content="https://iamting93.github.io/2019/08/31/python/linux下利用pyinstaller打包scrapy/index.html">
+<meta property="og:site_name" content="To Be Better One">
+<meta property="og:description" content="要把爬虫部署到第三方云上面，自然是不能直接把代码扔上去的。若果编译成.pyc文件打包放上去，也不太保险。最后就调了python里面常用的打包工具pyinstaller，官方教程点这里。 如何利用pyinstaller打包scrapy，其实网上有很多例子，譬如这篇，但是网上大多都是说如何打包成exe的，那么在linux下怎么打包呢？pyinstaller不是一个跨平台的打包工具，在windows下会">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-05-11T13:16:05.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux下利用pyinstaller打包scrapy">
+<meta name="twitter:description" content="要把爬虫部署到第三方云上面，自然是不能直接把代码扔上去的。若果编译成.pyc文件打包放上去，也不太保险。最后就调了python里面常用的打包工具pyinstaller，官方教程点这里。 如何利用pyinstaller打包scrapy，其实网上有很多例子，譬如这篇，但是网上大多都是说如何打包成exe的，那么在linux下怎么打包呢？pyinstaller不是一个跨平台的打包工具，在windows下会">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-python/linux下利用pyinstaller打包scrapy" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">linux下利用pyinstaller打包scrapy</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.08.31</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Ting</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>要把爬虫部署到第三方云上面，自然是不能直接把代码扔上去的。若果编译成.pyc文件打包放上去，也不太保险。最后就调了python里面常用的打包工具pyinstaller，官方教程点<a href="https://pyinstaller.readthedocs.io/en/stable/" target="_blank" rel="noopener">这里</a>。</p>
+<p>如何利用pyinstaller打包scrapy，其实网上有很多例子，譬如<a href="https://blog.csdn.net/u010600274/article/details/99345367" target="_blank" rel="noopener">这篇</a>，但是网上大多都是说如何打包成exe的，那么在linux下怎么打包呢？pyinstaller不是一个跨平台的打包工具，在windows下会打包成exe，在linux就会打包成linux下运行的elf，但是步骤都是一样的，所以可以参考上面推荐例子来打包。这里就不重复造轮子了，主要讲讲打包过程中踩过的坑。</p>
+<p>首先，了解一下pyinstaller的打包方式，若果是打包成一个可执行文件，那么pyinstaller就会把python文件编译成.pyc文件并且嵌入到可执行文件中。pyinstaller打包时候会分析需要的模块，并且打包进去。</p>
+<pre><code>To find out, PyInstaller finds all the import statements in your script. 
+It finds the imported modules and looks in them for import statements, 
+and so on recursively, until it has a complete list of modules your script may use.
+</code></pre><p>譬如输入命令行<code>pyinstaller -F test.py</code>，pyinstaller首先会查找test.py里面的import语句，然后导入这些模块A，然后再从模块A中再查找import语句，导入其它依赖的模块B，如此类推，直到所有所有需要的模块的都找到。在打包的时候生成<code>build/</code>文件夹里有一个xref-xxx.html文件，列出了打包test.py所需要的所有模块。</p>
+<p>另外，pyinstaller连python的解释器都拷贝进执行文件中，所以执行文件可以直接运行，不管计算机是否有python运行环境，但是这样的问题就是打包后的文件比较大。</p>
+<p>从以上的描述可以知道，pyinstaller打包进去的文件都是静态加载的，对于动态加载的模块，也就是<code>hiddenimports</code>,pyinstaller是不会打包进去的，需要手动在打包配置文件<code>.spec</code>里面指定。</p>
+<p>说完pyinstaller，再来看scrapy。按照官方的说法是，scrapy是低耦合的爬虫的框架，也就是说用户可以按照给定的API格式编写自己的组件，然后scrapy会在运行的时候动态加载，是的，动态加载。譬如爬虫组件，在scrapy源码里是这样加载进去的。</p>
+<p>首先动态加载爬虫文件所在的包：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">walk_modules</span><span class="params">(path)</span>:</span></span><br><span class="line">    <span class="string">"""Loads a module and all its submodules from the given module path and</span></span><br><span class="line"><span class="string">    returns them. If *any* module throws an exception while importing, that</span></span><br><span class="line"><span class="string">    exception is thrown back.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    For example: walk_modules('scrapy.utils')</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    mods = []</span><br><span class="line">    mod = import_module(path)</span><br><span class="line">    mods.append(mod)</span><br><span class="line">    <span class="comment"># 递归获取子模块,dfs</span></span><br><span class="line">    <span class="keyword">if</span> hasattr(mod, <span class="string">'__path__'</span>):</span><br><span class="line">        <span class="keyword">for</span> _, subpath, ispkg <span class="keyword">in</span> iter_modules(mod.__path__):</span><br><span class="line">            fullpath = path + <span class="string">'.'</span> + subpath</span><br><span class="line">            <span class="keyword">if</span> ispkg:</span><br><span class="line">                mods += walk_modules(fullpath)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                submod = import_module(fullpath)</span><br><span class="line">                mods.append(submod)</span><br><span class="line">    <span class="keyword">return</span> mods</span><br></pre></td></tr></table></figure>
+<p><code>submod</code>里是爬虫类所在的modul，然后再提取这些爬虫类对象。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">iter_spider_classes</span><span class="params">(module)</span>:</span></span><br><span class="line">    <span class="string">"""Return an iterator over all spider classes defined in the given module</span></span><br><span class="line"><span class="string">    that can be instantiated (ie. which have name)</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># this needs to be imported here until get rid of the spider manager</span></span><br><span class="line">    <span class="comment"># singleton in scrapy.spider.spiders</span></span><br><span class="line">    <span class="keyword">from</span> scrapy.spiders <span class="keyword">import</span> Spider</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> obj <span class="keyword">in</span> six.itervalues(vars(module)):</span><br><span class="line">        <span class="keyword">if</span> inspect.isclass(obj) <span class="keyword">and</span> \</span><br><span class="line">           issubclass(obj, Spider) <span class="keyword">and</span> \</span><br><span class="line">           obj.__module__ == module.__name__ <span class="keyword">and</span> \</span><br><span class="line">           getattr(obj, <span class="string">'name'</span>, <span class="literal">None</span>):</span><br><span class="line">            <span class="keyword">yield</span> obj</span><br></pre></td></tr></table></figure>
+<p>所以爬虫的类是一个动态加载的过程。</p>
+<p>其实不止爬虫模块，还有scarp, engine, downloadmiddleware等等scrapy的主要组件，都是动态加载的，也就是说pyinstaller都不会打包进可执行文件中。虽然打包过程没有问题，但是到了真正运行的时候就会报<code>ImportError: No module named &#39;...&#39;</code>的错误，其实都是这个原因导致的。</p>
+<p>解决这个问题就是提示缺哪个模块，就在打包配置文件<code>.spec</code>的<code>hiddenimports</code>中加入这个模块。</p>
+<p>除了这个<code>ImportError</code>的错误外，还会碰到<code>FileNotFound</code>的错误，这是因为和动态加载一样，pyinstaller也不会主动打包数据文件，同样需要在打包配置文件<code>.spec</code>的<code>datas</code>字段中，具体还是写法还是参考<a href="https://blog.csdn.net/u010600274/article/details/99345367" target="_blank" rel="noopener">例子</a>。</p>
+<p>此外，还曾遇到过一种情况，就是在本地环境能够运行爬虫，但是打包后就提示<code>KeyError: &#39;Spider not found: xxx</code>，这里得检查两个地方。</p>
+<ol>
+<li><p>正如上文所述，pyinstaller不会主动打包动态加载的文件，所以需要检查爬虫文件是否已经打包进去。</p>
+</li>
+<li><p><code>scrapy.cfg</code>这个scrapy的项目配置文件是否打包进去，或者是否和可执行文件在同一个目录下。没这个文件，scrapy会认为它不是在一个项目工程里面，所以找<code>settings.py</code>时候会有问题，导致不加载爬虫模块。</p>
+</li>
+</ol>
+<p>还有一个情况就是，执行文件可以成功运行，但是感觉就是卡住了一样不往下执行，也没有错误信息打印出来。这种情况下其实就是程序出错了，但是scrapy很迷的是异常抛出姿势有点问题，要知道错误原因，得修改一下源码。</p>
+<p>修改一下scrapy这个第三方库里面crawler.py文件，位置是安装python的根目录下的<code>Lib/site-packages/scrapy/crawler.py</code>，找到以下代码，并且修改。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@defer.inlineCallbacks</span></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">crawl</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">       <span class="keyword">assert</span> <span class="keyword">not</span> self.crawling, <span class="string">"Crawling already taking place"</span></span><br><span class="line">       self.crawling = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">       <span class="keyword">try</span>:</span><br><span class="line">           self.spider = self._create_spider(*args, **kwargs)</span><br><span class="line">           self.engine = self._create_engine()</span><br><span class="line">           <span class="comment"># 这里调用了spider的start_requests，返回的是一个request</span></span><br><span class="line">           start_requests = iter(self.spider.start_requests())</span><br><span class="line">           <span class="keyword">yield</span> self.engine.open_spider(self.spider, start_requests)</span><br><span class="line">           <span class="keyword">yield</span> defer.maybeDeferred(self.engine.start)</span><br><span class="line">       <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">           <span class="comment"># In Python 2 reraising an exception after yield discards</span></span><br><span class="line">           <span class="comment"># the original traceback (see https://bugs.python.org/issue7563),</span></span><br><span class="line">           <span class="comment"># so sys.exc_info() workaround is used.</span></span><br><span class="line">           <span class="comment"># This workaround also works in Python 3, but it is not needed,</span></span><br><span class="line">           <span class="comment"># and it is slower, so in Python 3 we use native `raise`.</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">           <span class="comment"># 打印错误信息</span></span><br><span class="line">           print(e)</span><br><span class="line">           <span class="keyword">if</span> six.PY2:</span><br><span class="line">               exc_info = sys.exc_info()</span><br><span class="line"></span><br><span class="line">           self.crawling = <span class="literal">False</span></span><br><span class="line">           <span class="keyword">if</span> self.engine <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">               <span class="keyword">yield</span> self.engine.close()</span><br><span class="line"></span><br><span class="line">           <span class="keyword">if</span> six.PY2:</span><br><span class="line">               six.reraise(*exc_info)</span><br><span class="line">           <span class="keyword">raise</span></span><br></pre></td></tr></table></figure>
+<p>就是把这个<code>Exception</code>的错误信息给打印出来，就知道问题出在哪里了。</p>
+<hr>
+<p>总结：</p>
+<p>这个scrapy的打包问题纠结了我好几天，主要是因为scrapy的动态加载导致了很多问题。对scrapy的源码研读还不够深，<code>scrapy.cfg</code>这个文件没有打包的这个坑我就找了很久才忽然想起。网上很多的例子都是抄来抄去，很难找到说到问题上的，打铁还需自身硬啊。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/07/17/diary/20190717/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/09/15/language/janpanese/日语笔记/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>byte数组转String的编码问题 | To Be Better One</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="IamTing93,">
+  
+
+  <meta name="description" content="byte数组转String的编码问题最近项目遇到了一个诡异的问题，就是从服务器返回用gzip压缩过的json响应到客户端，但是会提示gzip压缩包已经损坏，经过研究后，把原因记录一下。 首先贴上一段代码，若果知道结果以及原因，那么后面的内容就可以不用看了。 123456789101112131415161718192021package com.demo;import java.io.IOExce">
+<meta property="og:type" content="article">
+<meta property="og:title" content="byte数组转String的编码问题">
+<meta property="og:url" content="https://iamting93.github.io/2020/12/11/java/byte数组转String的编码问题/index.html">
+<meta property="og:site_name" content="To Be Better One">
+<meta property="og:description" content="byte数组转String的编码问题最近项目遇到了一个诡异的问题，就是从服务器返回用gzip压缩过的json响应到客户端，但是会提示gzip压缩包已经损坏，经过研究后，把原因记录一下。 首先贴上一段代码，若果知道结果以及原因，那么后面的内容就可以不用看了。 123456789101112131415161718192021package com.demo;import java.io.IOExce">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://iamting93.github.io/img/project/btyeToString_01.PNG">
+<meta property="og:image" content="https://iamting93.github.io/img/project/btyeToString_02.PNG">
+<meta property="og:updated_time" content="2021-05-11T13:16:05.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="byte数组转String的编码问题">
+<meta name="twitter:description" content="byte数组转String的编码问题最近项目遇到了一个诡异的问题，就是从服务器返回用gzip压缩过的json响应到客户端，但是会提示gzip压缩包已经损坏，经过研究后，把原因记录一下。 首先贴上一段代码，若果知道结果以及原因，那么后面的内容就可以不用看了。 123456789101112131415161718192021package com.demo;import java.io.IOExce">
+<meta name="twitter:image" content="https://iamting93.github.io/img/project/btyeToString_01.PNG">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#byte数组转String的编码问题"><span class="toc-text">byte数组转String的编码问题</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-java/byte数组转String的编码问题" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">byte数组转String的编码问题</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.12.11</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Ting</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="byte数组转String的编码问题"><a href="#byte数组转String的编码问题" class="headerlink" title="byte数组转String的编码问题"></a>byte数组转String的编码问题</h1><p>最近项目遇到了一个诡异的问题，就是从服务器返回用gzip压缩过的json响应到客户端，但是会提示gzip压缩包已经损坏，经过研究后，把原因记录一下。</p>
+<p>首先贴上一段代码，若果知道结果以及原因，那么后面的内容就可以不用看了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] normalBin = &#123;<span class="number">97</span>&#125;; <span class="comment">// 小写'a'的ascii码</span></span><br><span class="line">        String normalStr = <span class="keyword">new</span> String(normalBin);</span><br><span class="line">        <span class="keyword">byte</span>[] normalBinFromStr = normalStr.getBytes();</span><br><span class="line">        <span class="keyword">assert</span> Arrays.equals(normalBin, normalBinFromStr) : <span class="string">"First assertion error"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] bin = &#123;-<span class="number">117</span>&#125;;</span><br><span class="line">        String str = <span class="keyword">new</span> String(bin);</span><br><span class="line">        <span class="keyword">byte</span>[] binFromStr = str.getBytes();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">assert</span> Arrays.equals(bin, binFromStr) : <span class="string">"Second assertion error"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码中我们主要关注的是两个断言结果会是什么，运行一下。（记得带上-ea参数，不然断言不起作用)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -ea -cp ./ com.demo.Main</span><br></pre></td></tr></table></figure>
+<p>结果如下</p>
+<p><img src="/img/project/btyeToString_01.PNG" alt="图1" title="图1"></p>
+<p>第二个断言错误出错了。这是为什么呢，同样是把一个byte数组先转为string，然后再转为byte数组，但是第一个断言就没有问题，但是第二个断言就报错了。</p>
+<hr>
+<p>在探究原因之前，我们需要一点有关于编码的知识储备。</p>
+<p>说起编码，我们就能立马想起ascii码，UTF-8，GBK2312等等的编码规则，那它们之间是一个怎么样的关系呢？</p>
+<p>就拿ascii码和UTF-8来说，众所周知，ascii码是基于拉丁字母的一套电脑编码系统，主要用于显示现代英语和其他西欧语言，一共有128个字符，能表示52个字母（包括大写）以及0、1等数字，一些常用的符号（例如*、#、@等），还有控制字符或通信专用字符,如控制符：LF（换行）。对于表示英语等西欧语言来说，ascii码是已经足够了，但是对于表示其它语言，如汉语等，就显得力有不逮了，于是就有UTF-8等兼容ascii码的编码规则。</p>
+<p>UTF-8是一种可变长度字符编码，它可以用一至四个字节对Unicode字符集中的所有有效编码点进行编码（ Unicode是一种包含所有符号的编码）。参考<a href="https://blog.csdn.net/sandyen/article/details/1108168" target="_blank" rel="noopener">UTF-8编码规则</a>这篇博客，我们了解了UTF-8的编码规则</p>
+<pre><code>对于某一个字符的UTF-8编码，如果只有一个字节则其最高二进制位为0；如果是多字节，其第一个字节从最高位开始，连续的二进制位值为1的个数决定了其编码的位数，其余各字节均以10开头。
+如表：
+1字节 0xxxxxxx
+2字节 110xxxxx 10xxxxxx
+3字节 1110xxxx 10xxxxxx 10xxxxxx
+4字节 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+</code></pre><p>​    譬如，现在有一段字节流为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x69 0xE6 0x88 0x91 //解码结果为&quot;i我&quot;</span><br></pre></td></tr></table></figure>
+<p>UTF-8在解码的时候，读到了0x69(0110 1001)，发现这个字节是最高为0，所以判断这个字节是单字节，就直接解码为小写字母<code>i</code>(对应ascii码的69)，然后继续读后一字节0xE6(1110 0110)，发现这是一个三字节的字符，就会往后继续读两个字节0x88(1000 1000)和0x91(1001 0001)，并且解码为汉字<code>我</code>。至此，解码完毕。</p>
+<p>在对UTF-8编解码的工作过程有一个大概认识后，我们再来考虑一种情况，若果现在有如下的字节流，UTF-8会怎么处理?</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x8B</span><br></pre></td></tr></table></figure>
+<p>UTF-8读到字节0x8B(1000 1011)，发现这个字节并不对应上述编码规则的任何一条，这时候UTF-8会判断这个字节为无效字节，并且会用<code>0xEF</code> <code>0xBF</code> <code>0xBD</code> 这三个字节来替换这个无效字节。所以，当查看字节流的时候发现有</p>
+<p><code>0xEF</code> <code>0xBF</code> <code>0xBD</code> 这三个代表无效字节的标记时，就得检查是不是UTF-8转换出了问题了。</p>
+<hr>
+<p>有了上面的知识储备后，就不难理解代码中为什么第二个断言会错误了，我们来看看它们的字节流是怎么样子的</p>
+<p><img src="/img/project/btyeToString_02.PNG" alt="图2" title="图1"></p>
+<p>normalBin转换前后，字节流都是61，但是bin转为字符串再转回字节数组后，它的值很明显从0x8B(十进制为-117)变为<code>0xEF</code> <code>0xBF</code> <code>0xBD</code>，因为String的默认编码方式是UTF-8。</p>
+<hr>
+<p>那为什么会出现无效字节呢？其实这个就是我的项目中碰到的问题。</p>
+<p>项目需要使用gzip压缩文件，压缩过后会返回byte数组，但是经过网关的时候，因为某些原因，把这个byte数组强行转为String，导致一些字节丢失，从而导致压缩文件损坏。</p>
+<p>所以说，人家本来就是需要用byte数组才能正常工作，但是你却把人家变为String，那出错了就不意外了。类似的还有上传图片后损坏等等，也有可能是因为这个原因导致。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/03/19/java/Spring Security Architecture/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="hide pull-right" href="/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

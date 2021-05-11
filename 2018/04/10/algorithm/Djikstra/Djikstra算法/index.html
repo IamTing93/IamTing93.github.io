@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Djikstra算法 | To Be Better One</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="algorithm,">
+  
+
+  <meta name="description" content="本文将简单介绍求带权的单源最短路径长度的Djikstra算法">
+<meta name="keywords" content="algorithm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Djikstra算法">
+<meta property="og:url" content="https://iamting93.github.io/2018/04/10/algorithm/Djikstra/Djikstra算法/index.html">
+<meta property="og:site_name" content="To Be Better One">
+<meta property="og:description" content="本文将简单介绍求带权的单源最短路径长度的Djikstra算法">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/map.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step1_dist.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step1_visited.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step2_dist.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step2_visited.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step3_dist.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step3_visited.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step4_dist.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step4_visited.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step5_dist.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step5_visited.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step6_dist.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/algorithm/Djikstra/step6_visited.jpg">
+<meta property="og:updated_time" content="2021-05-11T13:16:05.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Djikstra算法">
+<meta name="twitter:description" content="本文将简单介绍求带权的单源最短路径长度的Djikstra算法">
+<meta name="twitter:image" content="https://iamting93.github.io/img/algorithm/Djikstra/map.jpg">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-algorithm/Djikstra/Djikstra算法" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Djikstra算法</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2018.04.10</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Ting</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>本文将简单介绍求带权的单源最短路径长度的Djikstra算法</p>
+<a id="more"></a>
+<p><b>问题:假设正在进行一场从广州到北京的旅行，途中会经过很多城市，每两个城市之间所花的时间长短不一。要怎样选择路线才能使得所花的时间最短？</b></p>
+<p>最简单的想法就是每次都从中转城市里挑一个所花时间最短的城市A，去到城市A后就更新一下到其他城市所需要的时间表，即从广州出发，通过城市A到其他城市(如城市B)的时间t是否比从广州直接到城市B的时间u要短，是的话就用时间t更新从广州直接到城市B所花的时间信息，然后从时间表中再挑一个所花时间最短的且未曾到访的城市X，重复以上操作，直到遍历完所有的城市。当遍历完后，就可以很容易知道从广州到北京的所花的最短时间了。</p>
+<p>下面对上述的过程进行更抽象的描述。</p>
+<p>假设现在有如下的图，我们需要计算从0号点到5号点的最短距离。</p>
+<p><img src="/img/algorithm/Djikstra/map.jpg" alt="map" title="map"></p>
+<p>假设有一个表dist，记录着从出发点(0号点)到其他点的最短距离。还有一个表visited，记录着已经访问过的点。</p>
+<ol>
+<li><p>对表dist和表visited进行初始化。<br> 与0号点直接邻接的点，它们之间距离就是直接距离；而不相邻的点，它们之间的距离是无限远。所以此时表dis和表visited的状态如下。</p>
+<p> <img src="/img/algorithm/Djikstra/step1_dist.jpg" alt="step1_表dist" title="step1_表dist"></p>
+<p> <img src="/img/algorithm/Djikstra/step1_visited.jpg" alt="step1_表visited" title="step1_表visited"></p>
+</li>
+<li><p>从表dist中可以知道，从0号点出发，到2号点的距离是最短的，所以选择2号点作为下一个拓展的点，标记为visited。此时需要更新表dist的信息。更新的原则是<code>若dist(a-&gt;b) + dist(b-&gt;c) &lt; dist(a-&gt;c)，则选择dist(a-&gt;b) + dist(b-&gt;c)作为从a到c的距离</code>，也就是说经过中转点距离比直接去的距离还要少。遍历那些还没有visited的点后，得到的表dist和表visted如下。</p>
+<p> <img src="/img/algorithm/Djikstra/step2_dist.jpg" alt="step2_表dist" title="step2_表dist"></p>
+<p> <img src="/img/algorithm/Djikstra/step2_visited.jpg" alt="step2_表visited" title="step2_表visited"></p>
+<p> 譬如，原本0-&gt;3的距离是无穷远，但从0-&gt;2-&gt;3的距离为6，所以更新0-&gt;3的距离为6。</p>
+</li>
+<li><p>重复上述的操作，直到所有的点都遍历完。这里给出每一步操作后表dist和表visited的状态。</p>
+<p> 第三步，拓展1号点。</p>
+<p> <img src="/img/algorithm/Djikstra/step3_dist.jpg" alt="step3_表dist" title="step3_表dist"></p>
+<p> <img src="/img/algorithm/Djikstra/step3_visited.jpg" alt="step3_表visited" title="step3_表visited"></p>
+<p> 第四步，拓展3号点。</p>
+<p> <img src="/img/algorithm/Djikstra/step4_dist.jpg" alt="step4_表dist" title="step4_表dist"></p>
+<p> <img src="/img/algorithm/Djikstra/step4_visited.jpg" alt="step4_表visited" title="step4_表visited"></p>
+<p> 第五步，拓展4号点。</p>
+<p> <img src="/img/algorithm/Djikstra/step5_dist.jpg" alt="step5_表dist" title="step5_表dist"></p>
+<p> <img src="/img/algorithm/Djikstra/step5_visited.jpg" alt="step5_表visited" title="step5_表visited"></p>
+<p> 第六步，拓展5号点。</p>
+<p> <img src="/img/algorithm/Djikstra/step6_dist.jpg" alt="step6_表dist" title="step2_表dist"></p>
+<p> <img src="/img/algorithm/Djikstra/step6_visited.jpg" alt="step6_表visited" title="step6_表visited"></p>
+</li>
+</ol>
+<p>从上面的描述中可以看出，Djikstra算法是采取了贪心策略：每次都选距离最短的。<br>当所有距离都相等的时候，Djikstra算法退化为广度优先搜索(BFS)。</p>
+<p>下面给出代码</p>
+<p>Djikstra.hpp<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> once</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> TING_DIJKSTRA_CPP</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TING_DIJKSTRA_CPP</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX 0x2ffffff</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_SIZE 20</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Djikstra</span> &#123;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Djikstra();</span><br><span class="line">    <span class="keyword">virtual</span> ~Djikstra();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">run</span><span class="params">(<span class="keyword">void</span>** <span class="built_in">map</span>, <span class="keyword">const</span> <span class="keyword">int</span>&amp; size, <span class="keyword">int</span>* out, <span class="keyword">const</span> <span class="keyword">int</span>&amp; from, <span class="keyword">const</span> <span class="keyword">int</span>&amp; to)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span>&amp; size)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">initDistance</span><span class="params">(<span class="keyword">void</span>** <span class="built_in">map</span>, <span class="keyword">const</span> <span class="keyword">int</span>&amp; size)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">selectNearestNode</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isVisited</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span>&amp; node)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setVisited</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span>&amp; node)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">updateDistance</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp; chooseNode, <span class="keyword">void</span>** <span class="built_in">map</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span>* mDistance;</span><br><span class="line">    <span class="keyword">bool</span>* mVisited;</span><br><span class="line">    <span class="keyword">int</span> mFrom;</span><br><span class="line">    <span class="keyword">int</span> mTo;</span><br><span class="line">    <span class="keyword">int</span> mSize;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// !TING_DIJKSTRA_CPP</span></span></span><br></pre></td></tr></table></figure></p>
+<p>Djikstra.cpp<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Dijkstra.hpp"</span></span></span><br><span class="line"></span><br><span class="line">Djikstra::Djikstra() &#123;&#125;</span><br><span class="line"></span><br><span class="line">Djikstra::~Djikstra() &#123;</span><br><span class="line">    <span class="keyword">if</span> (mDistance) &#123;</span><br><span class="line">        <span class="keyword">delete</span> mDistance;</span><br><span class="line">        mDistance = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mVisited) &#123;</span><br><span class="line">        <span class="keyword">delete</span> mVisited;</span><br><span class="line">        mVisited = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param map   the data matrix</span></span><br><span class="line"><span class="comment"> * @param size  size of matrix</span></span><br><span class="line"><span class="comment"> * @param out   output</span></span><br><span class="line"><span class="comment"> * @param from  the begining node</span></span><br><span class="line"><span class="comment"> * @param to    the ending node</span></span><br><span class="line"><span class="comment"> * @return true if successful</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Djikstra::run</span><span class="params">(<span class="keyword">void</span>** <span class="built_in">map</span>, <span class="keyword">const</span> <span class="keyword">int</span>&amp; size, <span class="keyword">int</span>* out, <span class="keyword">const</span> <span class="keyword">int</span>&amp; from, <span class="keyword">const</span> <span class="keyword">int</span>&amp; to)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (size &gt; MAX_SIZE) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mFrom = from;</span><br><span class="line">    mTo = to;</span><br><span class="line">    mSize = size;</span><br><span class="line"></span><br><span class="line">    init(size);</span><br><span class="line">    initDistance(<span class="built_in">map</span>, size);</span><br><span class="line">    setVisited(mFrom);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">1</span>; i &lt; mSize; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> node = selectNearestNode();</span><br><span class="line">        setVisited(node);</span><br><span class="line">        updateDistance(node, <span class="built_in">map</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    *out = mDistance[to];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * initialize the data member</span></span><br><span class="line"><span class="comment"> * param size   size of matrix</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Djikstra::init</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span>&amp; size)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mDistance) &#123;</span><br><span class="line">        <span class="keyword">delete</span> mDistance;</span><br><span class="line">        mDistance = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mVisited) &#123;</span><br><span class="line">        <span class="keyword">delete</span> mVisited;</span><br><span class="line">        mVisited = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mDistance = <span class="keyword">new</span> <span class="keyword">int</span>[size];</span><br><span class="line">    mVisited = <span class="keyword">new</span> <span class="keyword">bool</span>[size];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">        mDistance[i] = MAX;</span><br><span class="line">        mVisited[i] = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * initialize the mDistance data member</span></span><br><span class="line"><span class="comment"> * @param map   the data matrix</span></span><br><span class="line"><span class="comment"> * @param size  size of matrix</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Djikstra::initDistance</span><span class="params">(<span class="keyword">void</span>** <span class="built_in">map</span>, <span class="keyword">const</span> <span class="keyword">int</span> &amp; size)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>* _map = (<span class="keyword">int</span>*)(<span class="built_in">map</span> + mFrom);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mSize; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mFrom == i) &#123;</span><br><span class="line">            mDistance[i] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (_map[i]) &#123;</span><br><span class="line">            mDistance[i] = _map[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* select the closest and un-visited node to the beginning one</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Djikstra::selectNearestNode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> min = MAX;</span><br><span class="line">    <span class="keyword">int</span> node = <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//choose the nearest node which has been not visited</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mSize; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i != mFrom &amp;&amp; !isVisited(i) &amp;&amp; mDistance[i] &lt; min) &#123;</span><br><span class="line">            min = mDistance[i];</span><br><span class="line">            node = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* if the giving node is visited</span></span><br><span class="line"><span class="comment">* @param node   the node need to check</span></span><br><span class="line"><span class="comment">* @return if the node is visited</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Djikstra::isVisited</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp; node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mVisited[node];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * set the giving node visited</span></span><br><span class="line"><span class="comment"> * @param node  the node which has been visited</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Djikstra::setVisited</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp; node)</span> </span>&#123;</span><br><span class="line">    mVisited[node] = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * update the distance for each node after choosing one nearest node</span></span><br><span class="line"><span class="comment"> * @param chooseNode    the node that newly visited</span></span><br><span class="line"><span class="comment"> * @param map           the data matrix</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Djikstra::updateDistance</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp; chooseNode, <span class="keyword">void</span>** <span class="built_in">map</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>* _map = (<span class="keyword">int</span>*)(<span class="built_in">map</span> + chooseNode * mSize);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">register</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mSize; i++) &#123;</span><br><span class="line">        <span class="comment">// if distance(a-&gt;c) &gt; distance(a-&gt;b) + distance(b-&gt;c), then take distace(a-&gt;b) + distance(b-&gt;c)</span></span><br><span class="line">        <span class="keyword">int</span> tmp = *(_map + i) ? *(_map + i) : MAX;</span><br><span class="line">        <span class="keyword">if</span> (mDistance[i] &gt; mDistance[chooseNode] + tmp) &#123;</span><br><span class="line">            mDistance[i] = mDistance[chooseNode] + tmp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>文中有疏漏欢迎指出。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2018/02/21/reading/02月读书笔记/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2018/04/12/algorithm/Floyd/Floyd算法/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

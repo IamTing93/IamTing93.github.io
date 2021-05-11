@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>数字图像处理第一章--概述 | To Be Better One</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="digital image processing,">
+  
+
+  <meta name="description" content="本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第一章阅读笔记。">
+<meta name="keywords" content="digital image processing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字图像处理第一章--概述">
+<meta property="og:url" content="https://iamting93.github.io/2018/01/14/digital image processing/数字图像处理第一章--概述/index.html">
+<meta property="og:site_name" content="To Be Better One">
+<meta property="og:description" content="本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第一章阅读笔记。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-05-11T13:16:05.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数字图像处理第一章--概述">
+<meta name="twitter:description" content="本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第一章阅读笔记。">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-digital image processing/数字图像处理第一章--概述" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">数字图像处理第一章--概述</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2018.01.14</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Ting</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第一章阅读笔记。</p>
+<a id="more"></a>
+<p><code>数字图像</code>有两种定义方式：</p>
+<ol>
+<li><p>相当于一个MxN的网格，每个网格用一定的颜色去填充，形成了所看到的完整图像。其中MxN称为图像的分辨率。分辨率越高，图像越逼真。色彩范围越广，用以表示色彩的位数越长，图像颜色就逼真。</p>
+</li>
+<li><p>进行数学建模。可以定义为函数func(x,y)，其中x和y是平面上的位置点坐标，而func(x,y)，表示这一点的图像的灰度或强度。当平面上的位置点与其对应的灰度或强度的关系满足函数func(x,y),且x,y与func(x,y)同时为有限的、离散的数值时，该图像就称为数字图像。</p>
+</li>
+</ol>
+<p><code>位图</code>：可以认为是将图像保存为点阵数据的一种形式，相当于将一个图形分割成许多大小相同的小格子，然后用颜色对其进行填充。</p>
+<p><code>图形设备接口</code>(GDI)：系统与程序之间交互的媒介，是在设备上输入图像的工具。</p>
+<hr>
+<p>文中有疏漏欢迎指出。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2018/01/09/essay/铁齿铜牙纪晓岚/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2018/01/14/digital image processing/数字图像处理第三章--色彩空间/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>scrapy 日志输出踩过的坑 | To Be Better One</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="python, scrapy,">
+  
+
+  <meta name="description" content="最近在写爬虫，记录一下在日志输出的时候踩过的坑 scrapy使用的日志输出库是python的标准输出模块logging，使用方法网上一大堆。配置方式参考这里 在开发中一开始是用logging.config.fileConfig,但是这个配置方式不能使用filter组件，只好换了一个功能更强大的logging.config.dictConfig。 类似的代码如这里。 运行代码后，发现的问题就是scr">
+<meta name="keywords" content="python, scrapy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scrapy 日志输出踩过的坑">
+<meta property="og:url" content="https://iamting93.github.io/2018/10/24/python/scrapy 日志输出踩过的坑/index.html">
+<meta property="og:site_name" content="To Be Better One">
+<meta property="og:description" content="最近在写爬虫，记录一下在日志输出的时候踩过的坑 scrapy使用的日志输出库是python的标准输出模块logging，使用方法网上一大堆。配置方式参考这里 在开发中一开始是用logging.config.fileConfig,但是这个配置方式不能使用filter组件，只好换了一个功能更强大的logging.config.dictConfig。 类似的代码如这里。 运行代码后，发现的问题就是scr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-05-11T13:16:05.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="scrapy 日志输出踩过的坑">
+<meta name="twitter:description" content="最近在写爬虫，记录一下在日志输出的时候踩过的坑 scrapy使用的日志输出库是python的标准输出模块logging，使用方法网上一大堆。配置方式参考这里 在开发中一开始是用logging.config.fileConfig,但是这个配置方式不能使用filter组件，只好换了一个功能更强大的logging.config.dictConfig。 类似的代码如这里。 运行代码后，发现的问题就是scr">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-python/scrapy 日志输出踩过的坑" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">scrapy 日志输出踩过的坑</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2018.10.24</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Ting</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>最近在写爬虫，记录一下在日志输出的时候踩过的坑</p>
+<p>scrapy使用的日志输出库是python的标准输出模块logging，使用方法网上一<a href="https://www.cnblogs.com/yyds/p/6901864.html" target="_blank" rel="noopener">大堆</a>。配置方式参考<a href="https://www.cnblogs.com/yyds/p/6885182.html" target="_blank" rel="noopener">这里</a></p>
+<p>在开发中一开始是用<a href="https://docs.python.org/3.7/library/logging.config.html#logging.config.fileConfig" target="_blank" rel="noopener">logging.config.fileConfig</a>,但是这个配置方式不能使用filter组件，只好换了一个功能更强大的<a href="https://docs.python.org/3.7/library/logging.config.html#logging.config.dictConfig" target="_blank" rel="noopener">logging.config.dictConfig</a>。</p>
+<p>类似的代码如<a href="https://blog.csdn.net/caoxinjian423/article/details/84196609" target="_blank" rel="noopener">这里</a>。</p>
+<p>运行代码后，发现的问题就是scrapy本身自带的日志输出功能全部都没有了，无论怎么样都不输出。对代码进行debug，发现scrapy的logger都被disabled了。继续调试，发现在自定义的输出日志语句之前，scrapy的logger都是disabled=False的，但是执行完自定义的logging输出日志语句后，scrapy的logger就变成了disabled=True了。这里是真的百思不得其解。经过大量的面向谷歌后，终于发现在<a href="https://docs.python.org/3.7/library/logging.config.html#logging.config.fileConfig" target="_blank" rel="noopener">官方文档</a>里有那么一句话。</p>
+<pre><code>Note If you want to send configurations to the listener which don’t disable existing loggers,
+you will need to use a JSON format for the configuration, which will use dictConfig() for configuration.
+This method allows you to specify disable_existing_loggers as False in the configuration you send.
+</code></pre><p>disable_existing_loggers默认为true，这个会把scrapy的logger给disabled了</p>
+<p>在json的配置文件里，加上那么一句<code>disable_existing_loggers:false</code>。scrapy的log就都输出来了，问题解决。</p>
+<hr>
+<p>还有一个关于在多进程下利用ConcurrentLogHandler输出日志的问题，在linux下正常工作，但是在windows下，写文件的时候会被锁住挂起。解决方法是用<a href="https://github.com/Preston-Landers/concurrent-log-handler" target="_blank" rel="noopener">concurrent-log-handler</a>进行替代，参考<a href="https://blog.csdn.net/wkb342814892/article/details/80281182" target="_blank" rel="noopener">这里</a>。</p>
+<hr>
+<p>总结:因为都是边做边学，所以都没有好好研究过，特别是官方文档，浪费的时间有点多。还是那句老话，工欲善其事必先利其器，还是得先静下心来学习。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2018/04/12/algorithm/Floyd/Floyd算法/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2018/10/24/tensorflow/tensorflow 分布式部署踩坑经历/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

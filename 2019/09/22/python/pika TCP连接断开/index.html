@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>pika TCP连接断开 | To Be Better One</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="python, pika, rabbitmq,">
+  
+
+  <meta name="description" content="趁着工作任务开发学习了一波AMQP协议，以及其实现rabbitMQ，其实概念不难，也容易懂 rabbitMQ官方文档传送门：点这里（P.S. 官方文档真的写得通俗易懂，没用什么深奥词汇，英语渣的福音）  这里使用的是python下的pika来进行学习，按照教程走一遍基本上就知道怎么使用了。 本博文主要是关心一个情况，就是对于处理一些耗时的任务，TCP连接会断开的问题。 正常情况下，rabbitMQ">
+<meta name="keywords" content="python, pika, rabbitmq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pika TCP连接断开">
+<meta property="og:url" content="https://iamting93.github.io/2019/09/22/python/pika TCP连接断开/index.html">
+<meta property="og:site_name" content="To Be Better One">
+<meta property="og:description" content="趁着工作任务开发学习了一波AMQP协议，以及其实现rabbitMQ，其实概念不难，也容易懂 rabbitMQ官方文档传送门：点这里（P.S. 官方文档真的写得通俗易懂，没用什么深奥词汇，英语渣的福音）  这里使用的是python下的pika来进行学习，按照教程走一遍基本上就知道怎么使用了。 本博文主要是关心一个情况，就是对于处理一些耗时的任务，TCP连接会断开的问题。 正常情况下，rabbitMQ">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://iamting93.github.io/img/python/TCP_1.png">
+<meta property="og:image" content="https://iamting93.github.io/img/python/TCP_2.png">
+<meta property="og:updated_time" content="2021-05-11T13:16:05.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pika TCP连接断开">
+<meta name="twitter:description" content="趁着工作任务开发学习了一波AMQP协议，以及其实现rabbitMQ，其实概念不难，也容易懂 rabbitMQ官方文档传送门：点这里（P.S. 官方文档真的写得通俗易懂，没用什么深奥词汇，英语渣的福音）  这里使用的是python下的pika来进行学习，按照教程走一遍基本上就知道怎么使用了。 本博文主要是关心一个情况，就是对于处理一些耗时的任务，TCP连接会断开的问题。 正常情况下，rabbitMQ">
+<meta name="twitter:image" content="https://iamting93.github.io/img/python/TCP_1.png">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-python/pika TCP连接断开" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">pika TCP连接断开</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.09.22</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Ting</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>趁着工作任务开发学习了一波<a href="http://rabbitmq.mr-ping.com/AMQP/AMQP_0-9-1_Model_Explained.html" target="_blank" rel="noopener">AMQP协议</a>，以及其实现rabbitMQ，其实概念不难，也容易懂</p>
+<p>rabbitMQ官方文档传送门：<a href="https://www.rabbitmq.com/getstarted.html" target="_blank" rel="noopener">点这里</a>（P.S. 官方文档真的写得通俗易懂，没用什么深奥词汇，英语渣的福音） </p>
+<p>这里使用的是python下的pika来进行学习，按照教程走一遍基本上就知道怎么使用了。</p>
+<p>本博文主要是关心一个情况，就是对于处理一些耗时的任务，TCP连接会断开的问题。</p>
+<p>正常情况下，rabbitMQ会有一套检测TCP连接情况的机制，就是发送<a href="https://www.rabbitmq.com/heartbeats.html" target="_blank" rel="noopener">心跳包</a>了。</p>
+<p>客户端和服务器会决定一个叫做<code>heartbeat timeout</code>的值，具体就是双方同时提出一个非零值，谁小就用谁；若果有一个是0，就用非零的，rabbitmq默认的值是<code>60</code>。若果超过了这个时间值都没有收到心跳包，就会认为这个TCP连接不可达的了。经过抓包分析，这个发送行为是<code>双向</code>进行的。</p>
+<p>这里还有一个概念就是<code>heartbeat interval</code>，就是心跳包的发送周期，为<code>heartbeat timeout / 2</code>。若果错过2个心跳包，就会认为TCP连接不可达，刚好对应<code>heartbeat timeout</code>。</p>
+<p>好了，有了这些概念后，我们就可以开始今天的主题了：处理一些耗时的任务，TCP连接会断开。</p>
+<p>首先贴出代码。</p>
+<p>生产者代码:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pika</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line"></span><br><span class="line">    connection = pika.BlockingConnection(pika.ConnectionParameters(<span class="string">'localhost'</span>))</span><br><span class="line"></span><br><span class="line">    channel = connection.channel()</span><br><span class="line"></span><br><span class="line">    channel.queue_declare(queue=<span class="string">'test'</span>)</span><br><span class="line">    channel.basic_publish(exchange=<span class="string">''</span>,</span><br><span class="line">                          routing_key=<span class="string">'test'</span>,</span><br><span class="line">                          body=<span class="string">'hello world'</span>)</span><br><span class="line">    print(<span class="string">f'message sent'</span>)</span><br><span class="line">    connection.close()</span><br></pre></td></tr></table></figure></p>
+<p>代码很简单，声明了一个<code>test</code>队列，然后发送了一个消息。注意一点，若果没有对队列进行绑定，就会自动绑定到默认交换机。</p>
+<p>消费者代码。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pika</span><br><span class="line"></span><br><span class="line">done = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">callback</span><span class="params">(ch, method, properties, body)</span>:</span></span><br><span class="line">    print(<span class="string">f'I received the message'</span>)</span><br><span class="line">    print(<span class="string">f'the message: <span class="subst">&#123;body&#125;</span>'</span>)</span><br><span class="line">    ch.basic_ack(delivery_tag=method.delivery_tag)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line"></span><br><span class="line">    connection = pika.BlockingConnection(pika.ConnectionParameters(<span class="string">'localhost'</span>, heartbeat=<span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">    channel = connection.channel()</span><br><span class="line"></span><br><span class="line">    channel.queue_declare(queue=<span class="string">'test'</span>)</span><br><span class="line">    channel.basic_consume(queue=<span class="string">'test'</span>, on_message_callback=callback)</span><br><span class="line">    channel.start_consuming()</span><br><span class="line">    connection.close()</span><br></pre></td></tr></table></figure></p>
+<p>代码也很简单，就是声明了队列，然后绑定消息处理回调函数，就开始监听了。注意代码中的<code>heartbeat=3</code>，这里是定义的是<code>heartbeat timeout</code>的值，所以<code>heartbeat interval</code>就是<code>1.5</code></p>
+<p>运行一下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 生产者</span><br><span class="line">message sent</span><br><span class="line"></span><br><span class="line"># 消费者</span><br><span class="line">I received the message</span><br><span class="line">the message: b&apos;hello world&apos;</span><br></pre></td></tr></table></figure></p>
+<p>基础代码就是这样，但是我们得关注一下在没有消息的时候启动消费者，心跳包机制是怎么样的。<br>利用wireshark抓包如下</p>
+<p><img src="/img/python/TCP_1.png" alt="图1" title="图1"></p>
+<pre><code>No.39 客户端发送心跳包
+No.40 服务端发送ACK包
+No.41 服务端发送心跳包
+No.42 客户端发送ACK包
+往下重复...
+</code></pre><p>现在我们对代码修改一下，模拟处理耗时任务，修改如下。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pika</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">done = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">callback</span><span class="params">(ch, method, properties, body)</span>:</span></span><br><span class="line">    print(<span class="string">f'I received the message'</span>)</span><br><span class="line">    print(<span class="string">f'the message: <span class="subst">&#123;body&#125;</span>'</span>)</span><br><span class="line">    print(<span class="string">f'now I will sleep 10 seconds'</span>)</span><br><span class="line">    time.sleep(<span class="number">10</span>)</span><br><span class="line">    ch.basic_ack(delivery_tag=method.delivery_tag)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line"></span><br><span class="line">    connection = pika.BlockingConnection(pika.ConnectionParameters(<span class="string">'localhost'</span>,  heartbeat=<span class="number">3</span>))</span><br><span class="line"></span><br><span class="line">    channel = connection.channel()</span><br><span class="line"></span><br><span class="line">    channel.queue_declare(queue=<span class="string">'test'</span>)</span><br><span class="line">    channel.basic_consume(queue=<span class="string">'test'</span>, on_message_callback=callback)</span><br><span class="line">    channel.start_consuming()</span><br><span class="line">    connection.close()</span><br></pre></td></tr></table></figure></p>
+<p>在回调函数里面添加了睡眠10s的代码，运行一下，会报一下错误。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">I received the message</span><br><span class="line">the message: b&apos;hello world&apos;</span><br><span class="line">now I will sleep 10 seconds</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;F:/py_workplace/process/receiver.py&quot;, line 21, in &lt;module&gt;</span><br><span class="line">    channel.start_consuming()</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">pika.exceptions.StreamLostError: Stream connection lost: ConnectionResetError(10054, &apos;远程主机强迫关闭了一个现有的连接。&apos;, None, 10054, None)</span><br></pre></td></tr></table></figure>
+<p>程序报了<code>pika.exceptions.StreamLostError</code>错误，这是为什么呢？</p>
+<p>这是因为程序设置了心跳超时是3s，但是回调中却要睡眠10s，这时候TCP连接就断开了。</p>
+<p>wireshark的抓包如下。</p>
+<p><img src="/img/python/TCP_2.png" alt="图2" title="图2"></p>
+<pre><code>No.37 服务器发送了一个消息到客户端
+No.38 客户端发送ACK包
+No.39 服务端发送心跳包
+No.40 客户端发送ACK包
+No.41 服务端发送心跳包
+No.42 客户端发送ACK包
+...
+No.49 服务器发送了RST包
+</code></pre><p>对比上面正常空闲时候的抓包，可以看出，这里面缺少了客户端发送的心跳包，因为这个时候客户端正在睡眠，线程被挂起了。所以后面服务器多次没有收到来自客户端的心跳包，就认为连接不可达，断开了连接。当客户端睡眠结束，发送ACK确认的时候，因为连接断开而报错。(这里有个问题，从抓包时间看，貌似断开连接不是在心跳超时的那个时间点，实际是往后了，这里我也想不懂，希望有大神能告知一下)。</p>
+<p>这里要怎么解决？</p>
+<ol>
+<li><p>延长心跳超时的时间，不过这个在任务耗时未知的时候就只能靠经验设置了。</p>
+</li>
+<li><p>关闭心跳检测，<a href="https://www.rabbitmq.com/heartbeats.html#disabling" target="_blank" rel="noopener">方法</a>是在客户端和服务端把<code>heartbeat interval</code>设为0。但是有一个问题就是TCP会永久连接，有可能导致系统资源的耗尽。</p>
+</li>
+<li><p>增加一个心跳线程，专门用来处理心跳问题，这个方法没有验证过,貌似会有线程安全的问题。参考<a href="https://stackoverflow.com/questions/14572020/handling-long-running-tasks-in-pika-rabbitmq" target="_blank" rel="noopener">这里</a></p>
+</li>
+</ol>
+<hr>
+<p>这里补充一下关于<code>channel.start_consuning()</code> 和<code>connention.process_data_events()</code>的差别。</p>
+<p>首先，先了解一下<code>connention.process_data_events()</code></p>
+<p><a href="https://pika.readthedocs.io/en/stable/modules/adapters/blocking.html" target="_blank" rel="noopener">官方</a>解释是</p>
+<pre><code>Will make sure that data events are processed. Dispatches timer and channel callbacks if not called from the scope of 
+BlockingConnection or BlockingChannel callback. Your app can block on this method.
+</code></pre><p>就是用来专门处理消息事件的，有一个参数<code>time_limit</code>,指定等待消息的时间，单位为秒。当为<code>None</code>的时候，就会一直等待，也就是说，会阻塞线程。</p>
+<p>这个函数会处理服务器发过来的心跳包，而且也会向服务器发送心跳包。</p>
+<p>然后到<code>channel.start_consuning()</code>，在源码里面有这样的调用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">start_consuming</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="string">"""Processes I/O events and dispatches timers and `basic_consume`</span></span><br><span class="line"><span class="string">    callbacks until all consumers are cancelled.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    NOTE: this blocking function may not be called from the scope of a</span></span><br><span class="line"><span class="string">    pika callback, because dispatching `basic_consume` callbacks from this</span></span><br><span class="line"><span class="string">    context would constitute recursion.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :raises pika.exceptions.ReentrancyError: if called from the scope of a</span></span><br><span class="line"><span class="string">        `BlockingConnection` or `BlockingChannel` callback</span></span><br><span class="line"><span class="string">    :raises ChannelClosed: when this channel is closed by broker.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># Check if called from the scope of an event dispatch callback</span></span><br><span class="line">    <span class="keyword">with</span> self.connection._acquire_event_dispatch() <span class="keyword">as</span> dispatch_allowed:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> dispatch_allowed:</span><br><span class="line">            <span class="keyword">raise</span> exceptions.ReentrancyError(</span><br><span class="line">                <span class="string">'start_consuming may not be called from the scope of '</span></span><br><span class="line">                <span class="string">'another BlockingConnection or BlockingChannel callback'</span>)</span><br><span class="line"></span><br><span class="line">    self._impl._raise_if_not_open()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Process events as long as consumers exist on this channel</span></span><br><span class="line">    <span class="keyword">while</span> self._consumer_infos:</span><br><span class="line">        <span class="comment"># This will raise ChannelClosed if channel is closed by broker</span></span><br><span class="line">        self._process_data_events(time_limit=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<p>最后有一个<code>while</code>循环，就是执行<code>self._process_data_events(time_limit=None)</code>，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_process_data_events</span><span class="params">(self, time_limit)</span>:</span></span><br><span class="line">    <span class="string">"""Wrapper for `BlockingConnection.process_data_events()` with common</span></span><br><span class="line"><span class="string">    channel-specific logic that raises ChannelClosed if broker closed this</span></span><br><span class="line"><span class="string">    channel.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    NOTE: We need to raise an exception in the context of user's call into</span></span><br><span class="line"><span class="string">    our API to protect the integrity of the underlying implementation.</span></span><br><span class="line"><span class="string">    BlockingConnection's underlying asynchronous connection adapter</span></span><br><span class="line"><span class="string">    (SelectConnection) uses callbacks to communicate with us. If</span></span><br><span class="line"><span class="string">    BlockingConnection leaks exceptions back into the I/O loop or the</span></span><br><span class="line"><span class="string">    asynchronous connection adapter, we interrupt their normal workflow and</span></span><br><span class="line"><span class="string">    introduce a high likelihood of state inconsistency.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    See `BlockingConnection.process_data_events()` for documentation of args</span></span><br><span class="line"><span class="string">    and behavior.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param float time_limit:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    self.connection.process_data_events(time_limit=time_limit)</span><br><span class="line">    <span class="keyword">if</span> self.is_closed <span class="keyword">and</span> isinstance(self._closing_reason,</span><br><span class="line">                                     exceptions.ChannelClosedByBroker):</span><br><span class="line">        LOGGER.debug(<span class="string">'Channel close by broker detected, raising %r; %r'</span>,</span><br><span class="line">                     self._closing_reason, self)</span><br><span class="line">        <span class="keyword">raise</span> self._closing_reason  <span class="comment"># pylint: disable=E0702</span></span><br></pre></td></tr></table></figure>
+<p>从代码可以看到，<code>channel.start_consuning()</code>会调用到<code>connection.process_data_events()</code>，而且参数是<code>None</code>，就是说会一直等待消息。</p>
+<hr>
+<p>最后，我实在得吐槽一下，网上有一些博文感觉是真的不知道有没有验证过，我在查怎么处理耗时任务而导致连接断开的时候，很多博文都说用<code>connection.process_data_events()</code>就可以避免了，但是验证了一下，该报错的还是报错。还是自己动手，丰衣足食吧。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2019/09/15/language/janpanese/日语笔记/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/03/19/essay/Eyes on me/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>数字图像处理第三章--色彩空间 | To Be Better One</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="digital image processing,">
+  
+
+  <meta name="description" content="本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第三章阅读笔记。">
+<meta name="keywords" content="digital image processing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字图像处理第三章--色彩空间">
+<meta property="og:url" content="https://iamting93.github.io/2018/01/14/digital image processing/数字图像处理第三章--色彩空间/index.html">
+<meta property="og:site_name" content="To Be Better One">
+<meta property="og:description" content="本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第三章阅读笔记。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-05-11T13:16:05.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数字图像处理第三章--色彩空间">
+<meta name="twitter:description" content="本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第三章阅读笔记。">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#颜色特性"><span class="toc-text">颜色特性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#色彩空间"><span class="toc-text">色彩空间</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#RGB转换到YUV的方法"><span class="toc-text">RGB转换到YUV的方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#RGB转换到YCbCr的方法"><span class="toc-text">RGB转换到YCbCr的方法</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-digital image processing/数字图像处理第三章--色彩空间" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">数字图像处理第三章--色彩空间</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2018.01.14</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Ting</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第三章阅读笔记。</p>
+<a id="more"></a>
+<h4 id="颜色特性"><a href="#颜色特性" class="headerlink" title="颜色特性"></a>颜色特性</h4><p><code>颜色</code>：光本质上是一种电磁波。人眼可以感受的波长范围内的电磁波称为可见光。可见光通过三棱镜时将被分解为由紫到红的连续彩色色谱。</p>
+<p><code>色相</code>：即色彩的相貌，如大红、柠檬黄等。色相由原色、间色和复色来构成。色相的差别是由光波波长的长短产生的。即便是同一类颜色，也能分为几种色相。</p>
+<p><code>色调</code>：代表着某种颜色的性质和特点，它是由物体表面反射的光线中什么波长占优势决定的。色调可以指色彩的明暗度，也可以指色彩的冷暖感。</p>
+<p><code>饱和度</code>：指图像颜色的彩度，表示光线的色彩深浅度或鲜艳程度，调整饱和度也就是调整图像的彩度。从原理上讲，可见光谱和各种单色是最饱和的。彩色光谱中掺入的白光成分越多，就越不饱和。对颜色而言，饱和度变化有两个趋势：一是变亮，相当于掺入白色成分；一是变暗，相当于加入灰色或黑色。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一般来说，人眼最大能区分128种不同的色彩，130种色饱和度和23种明暗度。</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="色彩空间"><a href="#色彩空间" class="headerlink" title="色彩空间"></a>色彩空间</h4><p><code>色彩空间</code>：也称作色彩模型，是数学化描述色彩的基础。</p>
+<ol>
+<li>RGB颜色空间</li>
+<li>CMY/CMYK颜色空间：主要用于作画或印刷，颜料是会吸收光线，而不是增强光线。</li>
+<li>HSV/HSB(HSI/HCI/HSL)颜色空间</li>
+<li>YUV/YCbCr颜色空间：YUV是应用于电视机系统的一种颜色编码方法，主要用于优化彩色视频信号的传输，使其向后兼容老式黑白电视。因为他的亮度信号Y和色度信号U、V是分离的，所以如果没有U、V分量，那么这样表示的图就是黑白灰度图。</li>
+</ol>
+<h5 id="RGB转换到YUV的方法"><a href="#RGB转换到YUV的方法" class="headerlink" title="RGB转换到YUV的方法"></a>RGB转换到YUV的方法</h5><ul>
+<li>RGB -&gt; YUV<br>将R，G，B归一化，0 &lt;= R, G, B &lt;= 1</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Y = 0.299R + 0.587G + 0.114B</span><br><span class="line">U = -0.14713R - 0.28886G + 0.436B</span><br><span class="line">V = 0.615R - 0.51499G - 0.10001B</span><br></pre></td></tr></table></figure>
+<ul>
+<li>YUV -&gt; RGB</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R = Y + 1.13983U</span><br><span class="line">G = Y - 0.39465U - 0.58060V</span><br><span class="line">B = Y + 2.03211U</span><br></pre></td></tr></table></figure>
+<h5 id="RGB转换到YCbCr的方法"><a href="#RGB转换到YCbCr的方法" class="headerlink" title="RGB转换到YCbCr的方法"></a>RGB转换到YCbCr的方法</h5><p>R,G,B的取值范围是[0,255], 0 &lt;= Y &lt;= 255, 0 &lt;= Cb, Cr &lt; 256</p>
+<ul>
+<li>RGB -&gt; YCbCr</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Y = 0.29900R + 0.58700G + 0.11400B</span><br><span class="line">Cb = -0.16874R - 0.33126G + 0.50000B + 128</span><br><span class="line">Cr = 0.50000R - 0.41869G - 0.08131B + 128</span><br></pre></td></tr></table></figure>
+<ul>
+<li>YCbCr -&gt; RGB</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">R = Y + 1.402(Cr -128)</span><br><span class="line">G = Y - 0.34414(Cb - 128) - 0.71414(Cr - 128)</span><br><span class="line">B = Y + 1.772(Cb -128)</span><br></pre></td></tr></table></figure>
+<hr>
+<p>文中有疏漏欢迎指出。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2018/01/14/digital image processing/数字图像处理第一章--概述/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2018/01/14/digital image processing/数字图像处理第四章--图像文件/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

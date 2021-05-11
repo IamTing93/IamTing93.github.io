@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>数字图像处理第四章--图像文件 | To Be Better One</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="digital image processing,">
+  
+
+  <meta name="description" content="本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第四章阅读笔记。">
+<meta name="keywords" content="digital image processing">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字图像处理第四章--图像文件">
+<meta property="og:url" content="https://iamting93.github.io/2018/01/14/digital image processing/数字图像处理第四章--图像文件/index.html">
+<meta property="og:site_name" content="To Be Better One">
+<meta property="og:description" content="本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第四章阅读笔记。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/BMP_Struction.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/BMP_File_Head.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/BMP_MESSAGE_HEAD_1.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/BMP_MESSAGE_HEAD_2.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/GIF_Struction.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/GIF_Block_1.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/GIF_Block_2.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/GIF_Block_Description_Block.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/PNG_Struction.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/PNG_Block_Type_1.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/PNG_Block_Type_2.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/PNG_Block_Struction.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/JPEG_Encoding.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/JPEG_Decoding.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/JPEG_FDCT.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/JPEG_IDCT.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/JPEG_CCIR_Table.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/JPEG_Z_Sort.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/JPEG_Z_Sort._After.JPG">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/JPEG_Flags_1.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/JPEG_Flags_2.jpg">
+<meta property="og:image" content="https://iamting93.github.io/img/digital_image_processing/JPEG_Struction.jpg">
+<meta property="og:updated_time" content="2021-05-11T13:16:05.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数字图像处理第四章--图像文件">
+<meta name="twitter:description" content="本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第四章阅读笔记。">
+<meta name="twitter:image" content="https://iamting93.github.io/img/digital_image_processing/BMP_Struction.jpg">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#图像文件"><span class="toc-text">图像文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BMP文件格式"><span class="toc-text">BMP文件格式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#文件结构"><span class="toc-text">文件结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#文件头和信息头"><span class="toc-text">文件头和信息头</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#主要参数"><span class="toc-text">主要参数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GIF文件格式"><span class="toc-text">GIF文件格式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#文件结构-1"><span class="toc-text">文件结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#文件块结构"><span class="toc-text">文件块结构</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PNG文件格式"><span class="toc-text">PNG文件格式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#文件结构-2"><span class="toc-text">文件结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#关键数据块"><span class="toc-text">关键数据块</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JPEG文件格式"><span class="toc-text">JPEG文件格式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#JPEG编码-解码的理论基础"><span class="toc-text">JPEG编码/解码的理论基础</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#文件格式"><span class="toc-text">文件格式</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-digital image processing/数字图像处理第四章--图像文件" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">数字图像处理第四章--图像文件</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2018.01.14</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Ting</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>本文章是左飞的《Visual.Cpp数字图像处理开发入门与编程实践》的第四章阅读笔记。</p>
+<a id="more"></a>
+<h4 id="图像文件"><a href="#图像文件" class="headerlink" title="图像文件"></a>图像文件</h4><p><code>图像文件</code>：就是以数字形式存储的图像数据。</p>
+<p>图像文件一般由文件头、调色板数据和像素数据3部分组成。</p>
+<ul>
+<li>文件头：用于存放图像文件的各种参数，如图像的类型、宽度、高度等。</li>
+<li>调色板：图像的颜色索引表，指导图像正确地呈现色彩。真色彩图像中没有调色板。</li>
+<li>像素数据：图像信息的实体所在，存储了图像中各个点的像素信息。对于压缩数据来说，存在有损和无损两种形式。有损压缩通常以牺牲画面质量为代价换取了更高的压缩比。</li>
+</ul>
+<hr>
+<h4 id="BMP文件格式"><a href="#BMP文件格式" class="headerlink" title="BMP文件格式"></a>BMP文件格式</h4><h5 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h5><p>BMP文件由3部分组成，分别是位图文件头、位图信息和像素数据，其中位图信息又由位图信息头和调色板数据组成。位图文件头、位图信息头都是固定长度的，其中，位图文件头的长度是14字节，而位图信息头的长度是40字节，它们合起来称为图像文件头。像素数据位于BMP位图文件的最后。BMP位图文件的文件结果如下图所示。<br><img src="/img/digital_image_processing/BMP_Struction.jpg" alt="BMP文件结构" title="BMP文件结构"></p>
+<h5 id="文件头和信息头"><a href="#文件头和信息头" class="headerlink" title="文件头和信息头"></a>文件头和信息头</h5><p>位图文件头是用来存储图像文件特征字符的结构体，这些特征字符标明了图像文件的大小和像素数据的存储位置等内容，如下图所示。<br><img src="/img/digital_image_processing/BMP_File_Head.jpg" alt="BMP文件头" title="BMP文件头"></p>
+<p>位图信息头给出了更详尽的位图特征参数，如下图所示。<br><img src="/img/digital_image_processing/BMP_MESSAGE_HEAD_1.jpg" alt="BMP信息头1" title="BMP信息头"><br><img src="/img/digital_image_processing/BMP_MESSAGE_HEAD_2.jpg" alt="BMP信息头2" title="BMP信息头"></p>
+<h5 id="主要参数"><a href="#主要参数" class="headerlink" title="主要参数"></a>主要参数</h5><ol>
+<li><p>图像的宽度、高度和像素总位数</p>
+<p> BMP文件的位平面数恒为1.图像文件信息头中直接给出了图像的宽度、高度和每位像素等参数。</p>
+</li>
+<li><p>调色板</p>
+<p> BMP文件的调色板（如果有）一定位于文件开始位置后的第54个字节处。调色板的数量取决于图像的类型。</p>
+</li>
+<li><p>像素数据</p>
+<p> 像素数据的位置紧跟在调色板之后，在信息头处。在操作BMP文件中的像素数组时需要注意以下几点。</p>
+<ul>
+<li>BMP文件的像素数据每行字节数必须是四的整数倍。</li>
+<li>像素数据从底端的一行开始向上存入文件，行内仍保持从左至右的顺序。</li>
+<li>16色彩图像采用单一平面结构。</li>
+<li>真色彩图像的像素数据存放顺序是BGR，而非RGB。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h4 id="GIF文件格式"><a href="#GIF文件格式" class="headerlink" title="GIF文件格式"></a>GIF文件格式</h4><p>GIF是英文Graphics Interchange Format(图形交换格式)的缩写。总的来说GIF格式的特点是压缩比高，磁盘空间占用少。GIF文件只支持二值、16色、和256色3种图像类型，不支持真色彩图像。</p>
+<h5 id="文件结构-1"><a href="#文件结构-1" class="headerlink" title="文件结构"></a>文件结构</h5><p>GIF文件由全局信息表、调色板数据、局部信息表和像素数据4部分组成。全局信息表和局部信息表的长度是固定的，全局信息表的长度恒为13字节，而局部信息表的长度恒为10字节。一个GIF文件可能存储着多幅图像，但整个文件只有一个全局信息表，而每幅图像则各自拥有一个局部信息表，局部信息表以逗号做前导符，整个文件以分号结尾。如下图所示。<br><img src="/img/digital_image_processing/GIF_Struction.JPG" alt="GIF文件结构" title="GIF文件结构"></p>
+<p>GIF图像文件以数据块为单位来存储图像的相关信息，常用图像文件快如下所示。<br><img src="/img/digital_image_processing/GIF_Block_1.JPG" alt="GIF图像文件常用块1" title="GIF图像文件常用块"><br><img src="/img/digital_image_processing/GIF_Block_2.JPG" alt="GIF图像文件常用块2" title="GIF图像文件常用块"></p>
+<p>按照上表所述的块的特征将他们分为以下3类。</p>
+<ol>
+<li><p>控制块</p>
+<p> 头部、逻辑屏幕描述块、图像控制扩充和尾记录，它们都属于控制块。控制块包含了用于控制处理数据流或设置硬件参数的信息。</p>
+</li>
+<li><p>成像块</p>
+<p> 成像块包括图像描述块、全局调色板、局部调色板、图像压缩数据和图像说明扩充块。它们包含了用于在显示设备上成像的信息和数据。</p>
+</li>
+<li><p>特殊用途块</p>
+<p> 特殊用途块包含了既不用于处理数据流也不用于在显示设备上成像的信息。它的成员包括图像注释扩充块和应用程序扩充块。</p>
+</li>
+</ol>
+<h5 id="文件块结构"><a href="#文件块结构" class="headerlink" title="文件块结构"></a>文件块结构</h5><ol>
+<li><p>文件信息头</p>
+<p> 文件信息头仅有6个字节，其中3个字节是GIF文件表示符，其值为“GIF”，另外3个字节显示版本号“87a”或“89a”，其结构定义如下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">gifheader</span> &#123;</span></span><br><span class="line">	BYTE buSignature[<span class="number">3</span>];</span><br><span class="line">	BYTE byVersion[<span class="number">3</span>];</span><br><span class="line">&#125; GIFHEADER;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>逻辑屏幕描述块</p>
+<p> 逻辑屏幕可以指导如何显示图像，其结构定义如下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">gifscrdes</span> &#123;</span></span><br><span class="line">	WORD wWidth;				<span class="comment">// 逻辑屏幕宽度，2 Bytes</span></span><br><span class="line">	WORD wDepth;				<span class="comment">// 逻辑屏幕高度，2 Bytes</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">globalflag</span> &#123;</span></span><br><span class="line">		BYTE PalBits;			<span class="comment">// 全局调色板位数，3 Bits</span></span><br><span class="line">		BYTE SortFlag;			<span class="comment">// 短标志， 1 Bit</span></span><br><span class="line">		BYTE ColorRes;			<span class="comment">// 颜色方案，3 Bits</span></span><br><span class="line">		BYTE GlobalPal;			<span class="comment">// 全局调色板标志，1 Bit</span></span><br><span class="line">	&#125; GlobalFlag;</span><br><span class="line">	BYTE byBackground;			<span class="comment">// 背景色索引，1 Byte</span></span><br><span class="line">	BYTE byAspect;				<span class="comment">// 像素高宽比，1 Byte</span></span><br><span class="line">&#125; GIFSCREDSC;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>全局调色板</p>
+<p> 这里的调色板与在BMP中所提及到的色板从本质上讲是一致的，GIF格式利用调色板来显示基于光栅的图像，全局调色板对于那些没有设置局部调色板的图像起作用。全局调色板包含一个按照字节顺序表示RGB色彩分量的色表，它的大小由GlobalFlag.PalBits来决定。在逻辑视屏描述块中的全局色表标志位置为1时表示有全局色表。</p>
+</li>
+<li><p>图像描述块</p>
+<p> 通常当一个GIF文件内包含有多幅图像时，一幅图像结束之后紧接着是下一幅图像的标识符，图像标识符以0x2C(‘,’逗号)字符开始，紧接着定义它的图像性质，包括图像相对于逻辑屏幕边界的偏移量X和Y、图像的宽度和高度，以及有无局部颜色列表和颜色列表大小等。图像描述块共10个字节，其结构如下图所示。<br><img src="/img/digital_image_processing/GIF_Block_Description_Block.JPG" alt="GIF-图像描述块结构" title="GIF-图像描述块结构"><br> 其中m是局部颜色列表标志，该位为1是表示紧接在图像标识符的后面有一个局部颜色列表，为0则没有；i是交织标志，如果该位为1则表示图像数据使用交织方式进行排列，否则就是用顺序排列方式；s为分类标志，如果该位为1则表示紧接着的局部颜色列表分类排列；r是保留位;pixel表示局部颜色列表的大小。</p>
+</li>
+<li><p>局部调色板</p>
+<p> 调色板包含了一个按照RGB色彩分量的顺序排列的色表，该表作用于紧跟其后的图像数据。当局部色表标志位置位1时，该表出现，且其后紧跟图像的描述符。</p>
+</li>
+<li><p>图像注释扩充块</p>
+<p> 图像注释扩充块包含实际不属于GIF数据流的文本信息。这些文本信息包括图像的注释、描述等任何非控制和非图像数据。注释扩充江北解码器忽略，或保留到以后处理。该块是可选的。GIF中用识别码0xFE来判断一个扩充块是否是图像的注释扩充块。</p>
+</li>
+<li><p>应用程序扩充块</p>
+<p> 应用程序扩充块包含了应用说明信息，其块标记为0xFF，结构定义如下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">gifapplication</span> &#123;</span></span><br><span class="line">	BYTE byBlockSize;			<span class="comment">// 指定该应用程序扩展块的长度。</span></span><br><span class="line">	BYTE byIdentifier[<span class="number">8</span>];		<span class="comment">// 指定应用程序的名称</span></span><br><span class="line">	BYTE byAuthentication[<span class="number">3</span>];	<span class="comment">// 指定应用程序识别码</span></span><br><span class="line">&#125; GIFAPPLICATION;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件结束块</p>
+<p> 该文件结束块是一个单字段块，它是GIF图像文件的最后一个字节，用来指示该数据流的结束，其取值固定为0x3B。</p>
+</li>
+<li><p>图像压缩数据</p>
+<p> 图像压缩数据由两部分组成：LZW编码长度（LZW Minimum Code Size）和图像数据。<br> 图像数据在压缩前有两种排列格式：连续和交织。其中连续方式按照从左到右、从上到下的顺序排列图像的光栅数据；交织是按下面的方法处理光栅数据。</p>
+<pre><code>创建四个通道保存数据，每个通道提取不同行的数据：
+第一通道提取从第0行开始每隔8行的数据；
+第二通道提取从第4行开始每隔8行的数据；
+第三通道提取从第2行开始每隔4行的数据；
+第四通道提取从第1行开始每隔2行的数据。
+以此类推......
+</code></pre></li>
+<li><p>控制扩充块</p>
+<p>图像控制扩充块可以放在一个图像块（图像标识符）或文本扩展块的前面，用来控制跟在其后的第一个图像的渲染方式。</p>
+</li>
+<li><p>图像文本扩充块</p>
+<p>图像文本扩充定义了与图像同时显示的文字信息。GIF中用识别码0x01来判断一个扩充块是否是图像的注释扩充块。</p>
+</li>
+</ol>
+<hr>
+<h4 id="PNG文件格式"><a href="#PNG文件格式" class="headerlink" title="PNG文件格式"></a>PNG文件格式</h4><p>PNG(Portable Network Graphics)便携式网络图片为无损压缩位图图形文件格式，PNG格式被认为是目前保证不失真的格式。<br>PNG一方面吸取了GIF和JPG二者的优点，存储形式丰富，并允许使用类似GIF格式的调色板技术，支持真彩色图像，并且具备Alpha通道等特性；另一方面它能把图像文件压缩到极限以利于网络传输，但又能保留所有与图像品质有关的信息。</p>
+<h5 id="文件结构-2"><a href="#文件结构-2" class="headerlink" title="文件结构"></a>文件结构</h5><pre><code>PNG图像格式文件由一个8字节的PNG文件署名域和3个以上的后续数据块组成。PNG文件包括8字节文件署名（0x89 0x50 0x4E 0x47 0x0D 0x0A 0x1A 0x0A），用来识别PNG格式。也就是说对于一个PNG文件来说，其文件头总是由位固定的字节来描述。下图为一个标准的PNG文件结构。
+</code></pre><p><img src="/img/digital_image_processing/PNG_Struction.JPG" alt="PNG文件结构" title="PNG文件结构"></p>
+<pre><code>PNG中的数据块分为两种类型，一种被称为关键数据块（Critical Chunk），是必须包含、读写软件也都必须要支持的数据块；另一种叫做辅助数据块（Ancillary Chunks），这是可选的数据块。下面是PNG文件中用到的数据块。
+</code></pre><p><img src="/img/digital_image_processing/PNG_Block_Type_1.JPG" alt="PNG-数据块类型-1" title="PNG-数据块类型-1"><br><img src="/img/digital_image_processing/PNG_Block_Type_2.JPG" alt="PNG-数据块类型-2" title="PNG-数据块类型-2"></p>
+<pre><code>每个PNG图片的数据块的结构都是一样的，如下所示。
+</code></pre><p><img src="/img/digital_image_processing/PNG_Block_Struction.JPG" alt="PNG-数据块结构" title="PNG-数据块结构">    </p>
+<h5 id="关键数据块"><a href="#关键数据块" class="headerlink" title="关键数据块"></a>关键数据块</h5><pre><code>PNG中的关键数据块共有4个：文件头数据块（IHDR）、调色板数据块（PLTE）、图像数据块（IDAT）和图像结束数据块（IEND）。
+</code></pre><ol>
+<li><p>文件头数据块（IHDR）</p>
+<p> IHDR中包含有图像基本信息，作为第一个数据出现并只出现一次。文件头数据块由13字节组成，其结构定义如下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">IHDR</span> &#123;</span></span><br><span class="line">	BYTE Width;							<span class="comment">// 图像宽度，以像素为单位</span></span><br><span class="line">	BYTE Height;						<span class="comment">// 图像高度，以像素为单位</span></span><br><span class="line">	BYTE BitDepth;						<span class="comment">// 图像深度</span></span><br><span class="line">	BYTE ColorType;						<span class="comment">// 颜色类型</span></span><br><span class="line">	BYTE CompressionMethod;				<span class="comment">// 压缩方法（LZ77派生算法）</span></span><br><span class="line">	BYTE FilterMethod；					<span class="comment">// 滤波器方法</span></span><br><span class="line">	BYTE InterlaceMethod;				<span class="comment">// 隔行扫描方法</span></span><br><span class="line">&#125; IHDR;</span><br></pre></td></tr></table></figure>
+<pre><code>* 色彩深度
+BitDepth指定图像的色彩深度。当图像为索引彩色图像时，改参数的取值为1、2、4或8；当图像为灰度图像时，该值得取值为1、2、4、8或16；当图像是真彩色图像时，该值的取值为8或16。
+
+* 颜色类型
+ColorType指定图像的颜色类型。当图像为灰度图像时，该参数的取值为0；当图像为真彩色图像时，该参数的取值为2；当图像为索引彩色图像时，该参数的取值为3；当图像带Alpha通道数据的灰度图像时，该参数的取值为4；当图像为带Alpha通道数据的真彩色图像时，该参数的取值为6。
+
+* 隔行扫描方法
+InterlaceMethod指定图像的隔行扫描方法。当该值为0时，即表示非隔行扫描；当该值为1时，即表示采用Adam7隔行扫描方法。
+</code></pre></li>
+<li><p>调色板数据块（PLTE）</p>
+<p> PLTE数据块定义了图像的调色板信息，它包含有与索引彩色图像相关的彩色变换数据，这些数据可以包含1~256个调色板信息，每一个调色板信息由3个字节组成，调色板的长度应该是3的倍数。并不是所有的PNG格式的图片都有调色板数据块，真彩色图片可能就没有调色板数据块，必须放在图像数据块之前。</p>
+</li>
+<li><p>图像数据块（IDAT）</p>
+<p> IDAT数据块中存储了实际图像数据。PNG数据流允许包含多个连续顺序的图像数据块。</p>
+</li>
+<li><p>图像结束数据（IEND）</p>
+<p> IEND永远放在PNG文件的尾部，表示PNG数据流结束。事实上PNG文件结尾的12个字符永远是如下这样的序列：00 00 00 00 49 45 4E 44 AE 42 60 82。这是因为根据数据块结构的定义，IEND数据块的长度总是0（00 00 00 00），数据标识总是IEND（49 45 4E 44），因此，CRC码也总是AE 42 60 82。</p>
+</li>
+</ol>
+<h4 id="JPEG文件格式"><a href="#JPEG文件格式" class="headerlink" title="JPEG文件格式"></a>JPEG文件格式</h4><p>JPEG（联合照片专家组，Joint Photographic Experts Group）是一个国际数字图像压缩标准。它用有损压缩方式去除冗余的图像和彩色数据，获取极高的压缩率的同时能展现十分生动的图像。<br>JPEG被认为是目前压缩比最高的静态图像。JPEG编码有多种模式，其中最常用的JEPG编码是基于离散余弦变换的顺序型图像处理模式，又称为基线系统（Baseline）。</p>
+<h5 id="JPEG编码-解码的理论基础"><a href="#JPEG编码-解码的理论基础" class="headerlink" title="JPEG编码/解码的理论基础"></a>JPEG编码/解码的理论基础</h5><p>JPEG图像使用的是YCrCb模型。因为人眼对亮度Y的敏感度远大于色度差CrCb，因此可以再适当的程度上对CrCb进行削弱已达到压缩的目的。因此可以采取如下的做法，即每个像素点都保存一个8位的亮度值，每2x2个像素点保存一个CrCb值，这种程度的处理几乎不会引起图像在肉眼中的失真。</p>
+<p>下面是JPEG的编码以及解码过程。<br><img src="/img/digital_image_processing/JPEG_Encoding.JPG" alt="JPEG-编码流程" title="JPEG-编码流程"><br><img src="/img/digital_image_processing/JPEG_Decoding.JPG" alt="JPEG-解码流程" title="JPEG-解码流程"></p>
+<ol>
+<li>压缩原理<br>在正式进行JPEG编码之前，首先要对原始数据进行分块操作。此后的编码工作将以这些8x8数据块为单位进行；然后需要对数据进行一次离散余弦变换。进过变换后，图像中的低频分量都集中在在左上角，高频分量都分布在右下角。该低频分量通常包含了图像的主要信息，相比之下高频分量却不那么重要了，所以可以通过忽略高频分量来达到压缩的目的。注意离散余弦变换也是针对8x8数据块进行的，因此假如原始图片的长宽不是8的倍数，那么就需要先补成8的倍数。CrCb是以2x2的形式记录的，因此在大多数情况下，要将原始图像补成16x16的整数块，并按从左到右，从上到下的次序排列。</li>
+</ol>
+<p>在JPEG编码时将使用Forward DCT（FDCT）对图像进行离散余弦变换。在图像压缩一文中提到的二维离散余弦变换公式，当N = 8时，代入公式得到FDCT的变换公式如下：<br><img src="/img/digital_image_processing/JPEG_FDCT.JPG" alt="JPEG-离散余弦变换" title="JPEG-离散余弦变换"></p>
+<p>被称为直流系数DC，其它F(u,v)被称为交流系数AC。</p>
+<pre><code>当对JPEG图像进行解码时，将使用Inverse DCT（IDCT），在图像压缩一文中提到的二维离散反余弦变换公式，当N = 8时，带入公式得到IDCT的变换公式如下：
+</code></pre><p><img src="/img/digital_image_processing/JPEG_IDCT.JPG" alt="JPEG-离散反余弦变换" title="JPEG-离散反余弦变换"></p>
+<p>为了将高频分量去掉，需要进行量化处理，量化处理时JPEG编码中产生信息损失的根源。这里的量化指对经过FDCT变换后的频率系数进行量化，其目的在于减小非“0”系数的幅度及增加“0”值系数的数目。简单地说就是将某一个值除以量化表中对应的值。由于量化表左上角的值较小，右上角的值较大，这样就起到了保持低频分量，抑制高频分量的目的。这一步在实现的时候会对Y采用细量化，对CrCb采用粗量化，依次来提高压缩比。因此通常在两张不同的量化表，一张是针对Y的，一张是针对CrCb的。</p>
+<p>下面给出一张量化表的例子，下图为CCIR601标准电视图像所采用的的量化表，其中左图为色度量化表，右图为亮度量化表。观察量化表，不难发现表中的左上角的量化步距要比右下角的量化步距小，这样就满足对于高频分量的过滤要求。<br><img src="/img/digital_image_processing/JPEG_CCIR_Table.JPG" alt="JPEG-量化表" title="JPEG-量化表"></p>
+<p>下面要做的工作称为Z字型编排。因为经过离散余弦变换之后，图像中低频分量会集中在左上角，其中F(0,0)，即直流（DC）系数，是8x8子块的平均值，具体操作中药对其进行单独编码。考虑到8x8图像块经过DCT变换之后得到的DC直流系数具有的数值较大和相邻8x8图像块的DC系数值变化不大这两大特点，JPEG压缩算法将使用差分脉冲编码调制(DPCM)技术，对相邻图像块之间的量化DC系数的差值(Delta)进行编码，Delta = DC(0,0)[k] - DC(0,0)[k-1]。对剩余的63个交流（AC）系数进行行程编码。为了保证低频分量先出现，高频分量后出现，以增加行程中连续“0”的个数，即增加“0”的游程长度，故而采用Z字型编排方案，如下图所示。<br><img src="/img/digital_image_processing/JPEG_Z_Sort.JPG" alt="JPEG-Z字型编排方案" title="JPEG-Z字型编排方案"></p>
+<p>经过Z字型排列后，离散余弦变换系数的序号如下所示，这样就把一个二维的8x8矩阵变成了一个一维的1 x 64矢量，并满足频率较低的系数放在矢量的顶部的要求。<br><img src="/img/digital_image_processing/JPEG_Z_Sort._After.JPG" alt="JPEG-Z字型编排后的DCT系数序号示意图" title="JPEG-Z字型编排后的DCT系数序号示意图"></p>
+<p>为了提高压缩比例，JPEG算法将对DPCM编码后的直流系数和行程编码后的交流系数使用熵编码做进一步的压缩JPEG中使用<a href="https://zh.wikipedia.org/wiki/%E8%8C%83%E6%B0%8F%E9%9C%8D%E5%A4%AB%E6%9B%BC%E7%B7%A8%E7%A2%BC" target="_blank" rel="noopener">范式Huffman编码</a>(Canonical Huffman Code)来减少熵。基本思想通过使用某些强制的约定，仅通过很少的数据便能重构霍夫曼编码树的结构。</p>
+<p>后面所举的例子比较复杂，有兴趣可自行谷歌。</p>
+<h5 id="文件格式"><a href="#文件格式" class="headerlink" title="文件格式"></a>文件格式</h5><p>通常说的JPEG文件格式所保存的图像实际上是指JPEG和JFIF两种格式的混合体。JPEG格式规范本身定义了图像的压缩方式，同时它也被包括在定义分辨率和色彩模式的图像数据格式之中。而实际中能够读写JPEG文件格式的应用程序是以JFIF（JPEG文件交换格式，JPEG File Interchange Format）文件格式或其他类似格式保存图像数据的。</p>
+<p>对于JPEG和JFIF的关系可以作如下表述：JPEG本身只有描述如何将一个影像转换为位元组的数据串流，却并没有说明这些位元组如何在任何特定的存储媒体上被被封存起来。JFIF就详细地说明了如何从一个JPEG串流，产出一个适合于计算机存储和传输的图像格式。</p>
+<p>JPEG文件大体上可以认为是标记码和压缩数据的组合体。标记码部分给出了JPEG图像的所有特征信息，如图像的宽、高、Huffman表、量化表等，这与BMP中的头信息在作用上十分相似，但相比之下却要复杂得多。JPEG的每个标记都是由2个字节组成（不包括后面的参数），其前一个字节恒为0xFF。每个标记之前还可以添加数目不限的0xFF填充字节。</p>
+<p>常用的标记码和结构如下所示。<br><img src="/img/digital_image_processing/JPEG_Flags_1.jpg" alt="JPEG-常用标记码" title="JPEG-常用标记码"><br><img src="/img/digital_image_processing/JPEG_Flags_2.jpg" alt="JPEG-常用标记码" title="JPEG-常用标记码"></p>
+<p>较为普遍的JPEG文件的格式。(这里JPEG文件指的是JFIF形式的JPEG文件)。</p>
+<p><img src="/img/digital_image_processing/JPEG_Struction.jpg" alt="JPEG-文件结构" title="JPEG-文件结构"></p>
+<p>JPEG文件的内容是包括图像开始标记和图像结束标记，以及它们之间的6个标记段和一组压缩数据共同组成的，标记段的格式是相应标记后加特征参数。有兴趣的可自行谷歌。</p>
+<hr>
+<p>文中有疏漏欢迎指出。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2018/01/14/digital image processing/数字图像处理第三章--色彩空间/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2018/01/16/digital image processing/数字图像处理第四章--图像文件之图像压缩/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

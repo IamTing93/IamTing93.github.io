@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Spring Security Architecture | To Be Better One</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="IamTing93,">
+  
+
+  <meta name="description" content="Spring Security ArchitectureAuthentication和Access Control应用安全或多或少归结为两个独立的问题：认证（你是谁？）和授权（你能干啥？）。Spring Security就是针对这两个问题设计出来的框架，而且具有良好的拓展性。 Authentication认证的主要接口是AuthenticationManager，这个接口只有一个方法： 12345">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Security Architecture">
+<meta property="og:url" content="https://iamting93.github.io/2020/03/19/java/Spring Security Architecture/index.html">
+<meta property="og:site_name" content="To Be Better One">
+<meta property="og:description" content="Spring Security ArchitectureAuthentication和Access Control应用安全或多或少归结为两个独立的问题：认证（你是谁？）和授权（你能干啥？）。Spring Security就是针对这两个问题设计出来的框架，而且具有良好的拓展性。 Authentication认证的主要接口是AuthenticationManager，这个接口只有一个方法： 12345">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://github.com/spring-guides/top-spring-security-architecture/raw/master/images/authentication.png">
+<meta property="og:image" content="https://github.com/spring-guides/top-spring-security-architecture/raw/master/images/filters.png">
+<meta property="og:image" content="https://github.com/spring-guides/top-spring-security-architecture/raw/master/images/security-filters-dispatch.png">
+<meta property="og:updated_time" content="2021-05-11T13:16:05.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring Security Architecture">
+<meta name="twitter:description" content="Spring Security ArchitectureAuthentication和Access Control应用安全或多或少归结为两个独立的问题：认证（你是谁？）和授权（你能干啥？）。Spring Security就是针对这两个问题设计出来的框架，而且具有良好的拓展性。 Authentication认证的主要接口是AuthenticationManager，这个接口只有一个方法： 12345">
+<meta name="twitter:image" content="https://github.com/spring-guides/top-spring-security-architecture/raw/master/images/authentication.png">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Security-Architecture"><span class="toc-text">Spring Security Architecture</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Authentication和Access-Control"><span class="toc-text">Authentication和Access Control</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Authentication"><span class="toc-text">Authentication</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Customizing-Authentication-Managers"><span class="toc-text">Customizing Authentication Managers</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Authorization-or-Access-Control"><span class="toc-text">Authorization or Access Control</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-Security"><span class="toc-text">Web Security</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Creating-and-Customizing-Filter-Chains"><span class="toc-text">Creating and Customizing Filter Chains</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Request-Matching-for-Dispatch-and-Authorization"><span class="toc-text">Request Matching for Dispatch and Authorization</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Combining-Application-Security-Rules-with-Actuator-Rules"><span class="toc-text">Combining Application Security Rules with Actuator Rules</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Method-Security"><span class="toc-text">Method Security</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Working-with-Threads"><span class="toc-text">Working with Threads</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Processing-Secure-Methods-Asynchronously"><span class="toc-text">Processing Secure Methods Asynchronously</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-java/Spring Security Architecture" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Spring Security Architecture</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2020.03.19</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Ting</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </span>
+
+
+
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="Spring-Security-Architecture"><a href="#Spring-Security-Architecture" class="headerlink" title="Spring Security Architecture"></a>Spring Security Architecture</h1><h3 id="Authentication和Access-Control"><a href="#Authentication和Access-Control" class="headerlink" title="Authentication和Access Control"></a>Authentication和Access Control</h3><p>应用安全或多或少归结为两个独立的问题：认证（你是谁？）和授权（你能干啥？）。Spring Security就是针对这两个问题设计出来的框架，而且具有良好的拓展性。</p>
+<h5 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a>Authentication</h5><p>认证的主要接口是<code>AuthenticationManager</code>，这个接口只有一个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AuthenticationManager</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function">Authentication <span class="title">authenticate</span><span class="params">(Authentication authentication)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> AuthenticationException</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>AuthenticationManager</code>在<code>authenticate()</code>中做了以下3件事中的一件：</p>
+<ol>
+<li>如果输入的验证信息正确，那么返回一个<code>Authentication</code>对象（通常设置其属性<code>authenticated=true</code>）</li>
+<li>若果验证信息不正确，就直接抛出<code>AuthenticationException</code>异常</li>
+<li>若果不能判断信息正确与否就返回<code>null</code></li>
+</ol>
+<p><code>AuthenticationException</code>是一个运行时异常。它通常由应用默认的一个通用方法处理掉，这取决于应用的风格和目的。换句话说就是开发者一般不应该在代码里直接捕获和处理它，直接抛出。</p>
+<p>最常见的<code>AuthenticationManager</code>实现是<code>ProviderManager</code>，这个实现类利用一系列的<code>AuthenticationProvider</code>来进行认证。<code>AuthenticationProvider</code> 接口有点像<code>AuthenticationManager</code>，但是它有一个额外的方法可供调用，这个方法用来检查给定的认证方式是否支持：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AuthenticationProvider</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function">Authentication <span class="title">authenticate</span><span class="params">(Authentication authentication)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> AuthenticationException</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class&lt;?&gt; authentication)</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>supports()</code>中的<code>Class&lt;?&gt;</code>参数实际上是<code>Class&lt;? extends Authentication&gt;</code>。通过委托一系列的<code>AuthenticationProviders</code>，应用里的一个<code>ProviderManager</code>可以支持多种不同的认证方式。若果<code>ProviderManager</code>不能认证某个特殊的<code>Authentication</code>实例，那么它就会被跳过。</p>
+<p><code>ProviderManager</code>有一个可选的父类，若果子类的所有providers都返回<code>null</code>，那么就到父类中进行验证。若果没有父类，并且认证失败的话将会抛出<code>AuthenticationException</code>。</p>
+<p>有时候，一个应用会有关于某种资源的集合（譬如所有匹配<code>/api/**</code>URI的页面资源），每种集合都会有属于它自己的<code>AuthenticationManager</code>。有时候，这些集合的<code>AuthenticationManager</code>的实现类是一个<code>ProviderManager</code>，并且它们共享同一个父类。这个父类相当于一种“全局”资源，用作所有子类providers都认证失败时的一种替补验证方案。</p>
+<p><img src="https://github.com/spring-guides/top-spring-security-architecture/raw/master/images/authentication.png" alt="ProviderManagers with a common parent"></p>
+<h5 id="Customizing-Authentication-Managers"><a href="#Customizing-Authentication-Managers" class="headerlink" title="Customizing Authentication Managers"></a>Customizing Authentication Managers</h5><p>Spring Security提供一些配置helper来快速配置认证manager。最常见的helper就是<code>AuthenticationManagerBuilder</code>，适合用来创建in-memory，JDBC或者LDAP的<code>UserDetails</code>，或者是添加自定义的<code>UserDetailsService</code>。下面的例子展示了怎么配置一个全局的<code>AuthenticationManager</code>，即是上面提及的父类manager：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationSecurity</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   ... <span class="comment">// web stuff here</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">(AuthenticationManagerBuilder builder, DataSource dataSource)</span> </span>&#123;</span><br><span class="line">    builder.jdbcAuthentication().dataSource(dataSource).withUser(<span class="string">"dave"</span>)</span><br><span class="line">      .password(<span class="string">"secret"</span>).roles(<span class="string">"USER"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面是以web应用作为例子，但是<code>AuthenticationManagerBuilder</code>的应用场景不止如此。注意，这里的<code>AuthenticationManagerBuilder</code>是被用<code>@Autowired</code>注入到<code>@Bean</code>的方法中，这样可以让builder创建一个全局的父类<code>AuthenticationManager</code>。相反，若果我们用以下方式创建：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationSecurity</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  DataSource dataSource;</span><br><span class="line"></span><br><span class="line">   ... <span class="comment">// web stuff here</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(AuthenticationManagerBuilder builder)</span> </span>&#123;</span><br><span class="line">    builder.jdbcAuthentication().dataSource(dataSource).withUser(<span class="string">"dave"</span>)</span><br><span class="line">      .password(<span class="string">"secret"</span>).roles(<span class="string">"USER"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(通过<code>@Override</code>父类的方法)那么<code>AuthenticationManagerBuilder</code>只会创建一个局部的<code>AuthenticationManager</code>，它是全局<code>AuthenticationManager</code>的一个子类。在Spring boot应用中可以<code>@Autowired</code>全局<code>AuthenticationManager</code>到其它bean中，但是不能够<code>@Autowird</code>一个局部的，除非把它暴露出来。</p>
+<p>Spring Boot提供一个默认的全局 <code>AuthenticationManager</code>  ,除非自定义一个全局的<code>AuthenticationManager</code>Bean来替换它。一般情况下，默认的全局<code>AuthenticationManager</code>足够安全，无须过于担心其安全性，除非自定义一个全局<code>AuthenticationManager</code>。</p>
+<h5 id="Authorization-or-Access-Control"><a href="#Authorization-or-Access-Control" class="headerlink" title="Authorization or Access Control"></a>Authorization or Access Control</h5><p>一旦认证成功，我们就能进行下一步：授权。授权的核心是<code>AccessDecisionManager</code>。框架提供了三种实现类，这三种实现类都是委托一系列的<code>AccessDecisionVoter</code>来确定是不是要授权，有点像<code>ProviderManager</code>委托<code>AuthenticationProviders</code>。</p>
+<p>一个<code>AccessDecisionVoter</code>需要一个<code>Authentication</code>（表示当前认证了的用户）和一个被<code>ConfigAttributes</code>描述的受保护对象来确定是否授权：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(ConfigAttribute attribute)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class&lt;?&gt; clazz)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">vote</span><span class="params">(Authentication authentication, S object,</span></span></span><br><span class="line"><span class="function"><span class="params">        Collection&lt;ConfigAttribute&gt; attributes)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>Object</code>完全可以在<code>AccessDecisionManager</code>和<code>AccessDecisionVoter</code>之间进行传递。它代表一个用户想要访问的东西（最常见的是一个web资源或者一个Java类中的方法）。<code>ConfigAttributes</code>也可以在<code>AccessDecisionManager</code>和<code>AccessDecisionVoter</code>之间进行传递，它携带了一些信息，这些信息代表了这个受保护的<code>Object</code>的授权规则。<code>ConfigAttribute</code>是一个接口，但是它只有一个返回字符串的方法，这些字符串表示了受保护资源的授权规则，并且通常有特殊格式（譬如<code>ROLE_</code>前缀）或者是一个需要计算的表达式。</p>
+<p>大多开发者都只使用默认的<code>AccessDecisionManager</code>，具体实现类是<code>AffirmativeBased</code>（这个实现类的策略是只要有一个voter通过，就会被授权）。自定义是否授权，要么就是在voter里新增授权规则，要么就是修改原有的授权规则。</p>
+<p>使用Spring Expression Language(SpEL)表达式来确定是否授权很常见，如<code>isFullyAuthenticated() &amp;&amp; hasRole(&#39;FOO&#39;)</code>。若果需要自定义SpEL表达式，那么需要实现<code>SecurityExpressionRoot</code>  或者 <code>SecurityExpressionHandler</code>。</p>
+<hr>
+<h3 id="Web-Security"><a href="#Web-Security" class="headerlink" title="Web Security"></a>Web Security</h3><p>Spring Security 是基于Servlet的<code>Filters</code>，所以先看看<code>Filters</code>会很大有裨益。下图是一次HTTP请求从发起到被处理过程中所经过的handlers的层级图。</p>
+<p><img src="https://github.com/spring-guides/top-spring-security-architecture/raw/master/images/filters.png" alt="Filter chain delegating to a Servlet"></p>
+<p>客户端发送一个请求到APP，然后container基于请求的URI路径决定哪个过滤器和哪个servlet会处理这次请求。一次请求最多能被一个servlet处理，但是过滤器则是组成一条有序链，请求可以在链中被顺序地处理，并且一个过滤器可以拦截请求，不让后续的过滤器处理。一个过滤器也可以修改传递给下游过滤器和servlet的请求和（或者）响应。过滤器链的顺序非常重要，而且Spring Boot通过2个机制来管理链的顺序：一个是有<code>@Order</code>注解或者实现了<code>Ordered</code>接口的<code>Filter</code>类<code>@Bean</code>，另外一种是把过滤器修饰成<code>FilterRegistrationBean</code>，这个<code>FilterRegistrationBean</code>有一个<code>order</code>的成员变量决定调用的顺序。一些现成的过滤器定义了它们自己的值来表明它们想要相对于彼此的顺序位置（例如来自Spring Session的<code>SessionRepositoryFilter</code>有一个值为<code>Integer.MIN_VALUE + 50</code>的<code>DEFAULT_ORDER</code>，这说明它想在链中早点被处理，同时不妨碍比它靠前的过滤器被处理)。</p>
+<p>Spring Security本质上就是这条链中的一个<code>Filter</code>，具体类型是<code>FilterChainProxy</code>，</p>
+<p>下文将会提及这个类。在一个Spring Boot app中，这个Spring Security的过滤器是<code>ApplicationContext</code>中的一个<code>@Bean</code>，而且默认是被添加到链中，所以它可以处理每一次请求。它在链中的位置由<code>SecurityProperties.DEFAULT_FILTER_ORDER</code>定义，该位置由<code>FilterRegistrationBean.REQUEST_WRAPPER_FILTER_MAX_ORDER</code>锚定。不仅如此，从container的角度看，Spring Security就只是一个过滤器，但是从Spring Security角度看，它自身内部包含了很多额外的过滤器，每一个都有特定的作用。如下图:</p>
+<p>实际上，Spring Security的过滤器中甚至还有一层间接层：这个间接层在container中是以<code>DelegatingFilterProxy</code>形式存在，并且不是一个Spring <code>@Bean</code>。这个<code>DelegatingFilterProxy</code>在容器中代表着<code>FilterChainProxy</code>，这个<code>FilterChainProxy</code>有着一个固定的名字<code>springSecurityFilterChain</code>。</p>
+<p><code>FilterChainProxy</code>包含了所有的安全逻辑，并且在内部通过过滤器链来实现。链中的过滤器都有相同的API接口（从Servlet角度看它们都实现了<code>Filter</code>接口），并且可以拦截请求，不让后续的过滤器处理。</p>
+<p>在Spring Security中，顶层的<code>FilterChainProxy</code>管理着多条的过滤器链，而且container不知道这些链的存在。Spring Security filter包含了一个过滤器链的列表，并且把请求分派给第一个匹配的过滤器链。下图展示了基于请求路径的分派例子（/foo/<em> </em>会比 /**先匹配)。这是最常见的但不是唯一的匹配方式。最重要的一点就是只有一条过滤器链处理一个请求。</p>
+<p><img src="https://github.com/spring-guides/top-spring-security-architecture/raw/master/images/security-filters-dispatch.png" alt="Security Filter Dispatch"></p>
+<p>没有自定义安全配置的Spring Boot应用有n条过滤器链，一般n=6。第n - 1条链会忽略静态资源匹配，如<code>/css/**</code>和<code>/images/**</code>，以及错误页面<code>/error</code>（用户能通过配置<code>SecurityProperties</code>的<code>security.ignored</code>来配置这些路径）。最后一条过滤器链匹配全路径<code>/**</code>，而且更加灵活，这条链包含了认证，授权，异常处理，会话处理，头写入等等的逻辑。这条链默认一共有11个过滤器，但是用户一般不需要关心用到了哪些过滤器，以及什么时候用到。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Spring Security内所有的过滤器对于container来说都是未知的，这一点很重要，特别是在一个Spring Boot应用中，所有的`Filter`类型的`@Beans`都是自动被container注册。所以若果想在安全链中添加一个自定义的过滤器，就要不声明为`@Bean`，或者封装到`FilterRegistrationBean`中并且显式禁止container注册。</span><br></pre></td></tr></table></figure>
+<h5 id="Creating-and-Customizing-Filter-Chains"><a href="#Creating-and-Customizing-Filter-Chains" class="headerlink" title="Creating and Customizing Filter Chains"></a>Creating and Customizing Filter Chains</h5><p>在Spring Boot app中，默认备用的过滤器链（即匹配<code>/**</code>请求的链）有一个<code>SecurityProperties.BASIC_AUTH_ORDER</code>的预定义顺序。通过设置<code>security.basic.enabled=false</code>，或者设置一个lower的顺序就可以关掉这个预定义顺序。要这样做，只需添加一个<code>WebSecurityConfigurerAdapter</code>（或者<code>WebSecurityConfigurer</code>）的<code>@Bean</code>并且用<code>@Order</code>修饰这个类。例子如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Order</span>(SecurityProperties.BASIC_AUTH_ORDER - <span class="number">10</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationConfigurerAdapter</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    http.antMatcher(<span class="string">"/foo/**"</span>)</span><br><span class="line">     ...;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个bean会导致Spring Security增加一条新的过滤器链并且放在备用链前。</p>
+<p>许多应用对于不同的资源，都有不同的访问规则。每一个资源都有它自己的<code>WebSecurityConfigurerAdapter</code>，这个adapter有唯一的顺序，并且有自己的请求matcher。若果匹配规则有重叠，顺序靠前的过滤器将优先。</p>
+<h3 id="Request-Matching-for-Dispatch-and-Authorization"><a href="#Request-Matching-for-Dispatch-and-Authorization" class="headerlink" title="Request Matching for Dispatch and Authorization"></a>Request Matching for Dispatch and Authorization</h3><p>一条安全的过滤器链（等价于一个<code>WebSecurityCOnfigurerAdapter</code>）有一个用于请求的匹配器，这个匹配器决定这条过滤器链应用到这个HTTP请求。一旦一条过滤器链被应用，其它的就不会被应用了。但是在过滤器链中你能够通过在<code>HttpSecurity</code>中配置额外的匹配器来进行更细粒度的控制：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Order</span>(SecurityProperties.BASIC_AUTH_ORDER - <span class="number">10</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationConfigurerAdapter</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    http.antMatcher(<span class="string">"/foo/**"</span>)</span><br><span class="line">      .authorizeRequests()</span><br><span class="line">        .antMatchers(<span class="string">"/foo/bar"</span>).hasRole(<span class="string">"BAR"</span>)</span><br><span class="line">        .antMatchers(<span class="string">"/foo/spam"</span>).hasRole(<span class="string">"SPAM"</span>)</span><br><span class="line">        .anyRequest().isAuthenticated();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最常见的错误是忘记这些匹配器是应用于不同的处理过程，一个是匹配整个过滤器链（antMatcher(“/foo/**”)），另外一个只是设置访问规则（antMatchers(“/foo/bar”).hasRole(“BAR”)）。</p>
+<h5 id="Combining-Application-Security-Rules-with-Actuator-Rules"><a href="#Combining-Application-Security-Rules-with-Actuator-Rules" class="headerlink" title="Combining Application Security Rules with Actuator Rules"></a>Combining Application Security Rules with Actuator Rules</h5><p>若果使用Spring Boot Actuator来管理端点，那就希望这些端点都是安全的，并且默认就是如此。事实上只要添加Actuator到一个安全应用，就会得到一条额外的只应用到actuator端点的过滤器链。它定义了一个只匹配actuator端点的请求匹配器，并且有着一个值为5的<code>ManagementServerProperties.BASIC_AUTH_ORDER</code>，这个顺序要小于<code>SecurityProperties</code>的备用链，所以会在备用链前被调用。</p>
+<p>若果需要应用安全规则到这些actuator端点，可以添加一个顺序要比默认actuator端点的链更早的，匹配所有端点的过滤器链。若果想用默认的配置，那么最简单的方式是添加一个顺序比默认actuator后，但比备用早（如<code>ManagementServerProperties.BASIC_AUTH_ORDER + 1</code>的过滤器，如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Order</span>(ManagementServerProperties.BASIC_AUTH_ORDER + <span class="number">1</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationConfigurerAdapter</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    http.antMatcher(<span class="string">"/foo/**"</span>)</span><br><span class="line">     ...;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Method-Security"><a href="#Method-Security" class="headerlink" title="Method Security"></a>Method Security</h3><p>正如支持安全web应用那样，Spring Security也为安全访问Java方法提供支持。对于Spring Security来说这不过是一种不同“保护资源“。对于用户来说，这意味着访问规则使用相同格式的<code>ConfigAttribute</code>字符串（如角色或者表达式），但是编写代码的位置就不一样了。第一步是启动method security，例如在应用的顶层配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableGlobalMethodSecurity</span>(securedEnabled = <span class="keyword">true</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleSecureApplication</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之后就能直接装饰方法资源，如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Secured</span>(<span class="string">"ROLE_USER"</span>)</span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">secure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Hello Security"</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个一个有着安全方法的service。若果Spring创建一个这样类型的<code>@Bean</code>，那么它会被代理，并且调用者将会被安全拦截器进行权限验证，通过后方法才能执行。若果验证失败，那么调用者将会得到<code>AccessDeniedException</code>而不是方法的执行结果。</p>
+<p>还有其它用于方法的，可以增强安全性的注解，譬如<code>@PreAuthorize</code>和<code>@PostAuthorize</code>，分别能让你写一些关于方法参数和返回结果的表达式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">组合Web安全和方法安全的例子并不少见。过滤器链为用户提供常见的功能，如认证和重定向到登录页面等等，而方法安全提供更具颗粒度的保护。</span><br></pre></td></tr></table></figure>
+<h3 id="Working-with-Threads"><a href="#Working-with-Threads" class="headerlink" title="Working with Threads"></a>Working with Threads</h3><p>Spring Security从根本上来说是线程绑定的，因为它需要确保当前的认证用户信息可以被下游的消费者获取。基本构件是<code>SecurityContext</code>，它可能包含了一个<code>Authenticaiton</code>（当一个用户登录后<code>Authentication</code>将会被明确地标记为<code>authenticated</code>）。通过<code>SecurityContextHolder</code>静态方法，你可以总是访问和操作<code>SecurityContext</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SecurityContext context = SecurityContextHolder.getContext();</span><br><span class="line">Authentication authentication = context.getAuthentication();</span><br><span class="line"><span class="keyword">assert</span>(authentication.isAuthenticated);</span><br></pre></td></tr></table></figure>
+<p>在user应用代码中这样做不常见，但是要自定义认证过滤器的话，这会很有用（尽管Spring Security中有基类可以实现相同功能，避免使用<code>SecurityContextHolder</code>)。</p>
+<p>若果在一个web端点中访问当前认证用户，可以在<code>@RequestMapping</code>中传入参数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/foo"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">foo</span><span class="params">(@AuthenticationPrincipal User user)</span> </span>&#123;</span><br><span class="line">  ... <span class="comment">// do stuff with user</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个注解从<code>SecurityCOntext</code>中拉取当前<code>Authentication</code>，并且调用<code>getPrincipal()</code>方法得到参数。<code>Authentication</code>中的<code>Principal</code>的类型依赖于进行认证<code>AuthenticationManager</code>，因此这是一个获取安全用户数据引用的小技巧。</p>
+<p>若果使用Spring Security，那么来自<code>HttpServletRequest</code>的<code>Principal</code>会是<code>Authentication</code>类型，那么可以直接这样定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/foo"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">foo</span><span class="params">(Principal principal)</span> </span>&#123;</span><br><span class="line">  Authentication authentication = (Authentication) principal;</span><br><span class="line">  User = (User) authentication.getPrincipal();</span><br><span class="line">  ... <span class="comment">// do stuff with user</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有时候需要代码在没用Spring Security情况下正常工作，这些样就会很有用（你将需要更加安全地加载<code>Authentication</code>类）。</p>
+<h5 id="Processing-Secure-Methods-Asynchronously"><a href="#Processing-Secure-Methods-Asynchronously" class="headerlink" title="Processing Secure Methods Asynchronously"></a>Processing Secure Methods Asynchronously</h5><p>因为<code>SecurityContext</code>是线程绑定的，若果想在后台处理中调用安全方法，如带有<code>@Async</code>，那么需要确保上下文被传递。这可以归结为用后台任务（<code>Runnable</code>，<code>Callable</code>等）封装<code>SecurityContext</code>。Spring Security提供一些helpers来简化这个操作，例如使用<code>Runnable</code>和<code>Callable</code>的wrapper。为了传递<code>SecurityContext</code>到<code>@Async</code>方法，需要提供一个<code>AsyncConfigurer</code>并且确保<code>Executor</code>是正确类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationConfiguration</span> <span class="keyword">extends</span> <span class="title">AsyncConfigurerSupport</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Executor <span class="title">getAsyncExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DelegatingSecurityContextExecutorService(Executors.newFixedThreadPool(<span class="number">5</span>));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2020/03/19/essay/Eyes on me/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2020/12/11/java/byte数组转String的编码问题/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
